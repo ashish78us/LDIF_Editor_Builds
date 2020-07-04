@@ -1,2 +1,4 @@
 First Line in file2.txt
 Second line in file2.txt
+Third Line in file2.txt
+Fourth line in file2.txt

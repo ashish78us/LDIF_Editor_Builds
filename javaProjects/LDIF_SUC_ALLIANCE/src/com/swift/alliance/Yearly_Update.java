@@ -1,8 +1,8 @@
 package com.swift.alliance;
 
-import java.awt.BorderLayout;
+
 import java.awt.Color;
-import java.awt.EventQueue;
+
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -22,11 +22,15 @@ import java.awt.event.ActionEvent;
 
 public class Yearly_Update extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
-	private static int k=0,start=0,end=0,start_fromDate=0,start_TillDate=0;
+	private static int k=0,start_fromDate=0,start_TillDate=0;
 	private static StringBuilder sb ;
 	private static String rg_prod_version= null;
 	private static String rg_sb ="";

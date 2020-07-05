@@ -229,7 +229,7 @@ public class Regular_Update extends JFrame {
 		textArea.setBounds(10, 131, 313, 48);
 		contentPane.add(textArea);
 		
-		JComboBox comboBox = new JComboBox();
+		JComboBox<String> comboBox = new JComboBox<String>();
 		comboBox.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -262,7 +262,7 @@ public class Regular_Update extends JFrame {
 				
 			}
 		});
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Alliance Web Platform", "Alliance Access", "Alliance Gateway", "SNL"}));
+		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"Alliance Web Platform", "Alliance Access", "Alliance Gateway", "SNL"}));
 		comboBox.setBounds(144, 11, 179, 20);
 		contentPane.add(comboBox);
 		
@@ -350,14 +350,14 @@ public class Regular_Update extends JFrame {
 		lblSoftwareType.setBounds(10, 215, 94, 14);
 		contentPane.add(lblSoftwareType);
 		
-		JComboBox comboBox_1 = new JComboBox();
+		JComboBox<String> comboBox_1 = new JComboBox<String>();
 		comboBox_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				label.setText("");
 			}
 		});
-		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"software", "security"}));
+		comboBox_1.setModel(new DefaultComboBoxModel<String>(new String[] {"software", "security"}));
 		comboBox_1.setBounds(101, 216, 89, 20);
 		contentPane.add(comboBox_1);
 		comboBox_1.addActionListener(new ActionListener() {

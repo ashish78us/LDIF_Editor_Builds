@@ -33,6 +33,7 @@ public class Regular_Update extends JFrame {
 	/**
 	 * 
 	 */
+	//testing staging and commit principle
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textField;

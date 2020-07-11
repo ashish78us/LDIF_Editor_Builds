@@ -32,4 +32,5 @@ jobs:
       run: |
           cd javaProjects\LDIF_SUC_ALLIANCE\src\com\swift\alliance
           dir
+          java -version
         

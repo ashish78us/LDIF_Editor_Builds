@@ -37,4 +37,4 @@ jobs:
           dir javaProjects\LDIF_SUC_ALLIANCE\
           echo "dir javaProjects\LDIF_SUC_ALLIANCE\src\com\swift\alliance\"
           dir javaProjects\LDIF_SUC_ALLIANCE\src\com\swift\alliance\
-          echo "Done"
+          echo "Done on local PC"

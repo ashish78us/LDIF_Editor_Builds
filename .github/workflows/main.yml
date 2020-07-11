@@ -33,5 +33,8 @@ jobs:
           java -version
           echo "javac javaProjects\LDIF_SUC_ALLIANCE\src\com\swift\alliance\*.java -d javaProjects\LDIF_SUC_ALLIANCE\"
           javac javaProjects\LDIF_SUC_ALLIANCE\src\com\swift\alliance\*.java -d javaProjects\LDIF_SUC_ALLIANCE\
+          echo "dir javaProjects\LDIF_SUC_ALLIANCE\"
           dir javaProjects\LDIF_SUC_ALLIANCE\
+          echo "dir javaProjects\LDIF_SUC_ALLIANCE\src\com\swift\alliance\"
+          dir javaProjects\LDIF_SUC_ALLIANCE\src\com\swift\alliance\
           echo "Done"

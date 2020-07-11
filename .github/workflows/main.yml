@@ -31,5 +31,6 @@ jobs:
     - name: Run a multi-line script
       run: |
           java -version
-          javac javaProjects\LDIF_SUC_ALLIANCE\src\com\swift\alliance\*.java -d .
-        
+          echo "javac javaProjects\LDIF_SUC_ALLIANCE\src\com\swift\alliance\*.java -d javaProjects\LDIF_SUC_ALLIANCE\"
+          javac javaProjects\LDIF_SUC_ALLIANCE\src\com\swift\alliance\*.java -d javaProjects\LDIF_SUC_ALLIANCE\
+          echo "Done"

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="run"  name="LDIF editor for Alliance Products - Complile and run Java class" >
-	<target name="run" depends="compile">
-		<java classname="com.swift.alliance.LDIF4SoftwareUpdateCheck">
-			<classpath path="staging" />
-		</java>
+<project default="jar"  name="LDIF editor for Alliance Products - Complile and run Java class" basedir="." >
+	<target name="jar" depends="compile">
+		<jar destfile="Swift_Alliance_LDIF_Editor.jar"   />
+			
 	</target>
 	
 	<target name ="compile">
-		<javac includeantruntime="false" srcdir="./src" destdir="staging" />
+		<javac includeantruntime="false" srcdir="./src"  />
 	
 	</target>
 

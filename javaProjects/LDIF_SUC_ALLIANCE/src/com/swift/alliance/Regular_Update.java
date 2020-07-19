@@ -250,7 +250,7 @@ public class Regular_Update extends JFrame {
 					//System.out.println("In SAA");
 					}
 				else if (comboBox.getSelectedItem().toString() == "Alliance Entry")
-				{product_name = "SAA";
+				{product_name = "SAE";
 				search_builder = "SupportedSoftware p=\"SAE\"";
 				//System.out.println("In SAA");
 				}

@@ -249,6 +249,11 @@ public class Regular_Update extends JFrame {
 					search_builder = "SupportedSoftware p=\"SAA\"";
 					//System.out.println("In SAA");
 					}
+				else if (comboBox.getSelectedItem().toString() == "Alliance Entry")
+				{product_name = "SAA";
+				search_builder = "SupportedSoftware p=\"SAE\"";
+				//System.out.println("In SAA");
+				}
 					
 					else if (comboBox.getSelectedItem().toString() == "Alliance Gateway")
 						{product_name = "SAG";
@@ -263,7 +268,7 @@ public class Regular_Update extends JFrame {
 				
 			}
 		});
-		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"Alliance Web Platform", "Alliance Access", "Alliance Gateway", "SNL"}));
+		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"Alliance Web Platform", "Alliance Access", "Alliance Entry", "Alliance Gateway", "SNL"}));
 		comboBox.setBounds(144, 11, 179, 20);
 		contentPane.add(comboBox);
 		

@@ -6,7 +6,7 @@
 	</target>
 	
 	<target name ="compile">
-		<javac includeantruntime="false" srcdir="./src"  />
+		<javac includeantruntime="false" srcdir="./bin"  />
 	
 	</target>
 

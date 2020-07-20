@@ -254,7 +254,7 @@ public class Regular_Update extends JFrame {
 				search_builder = "SupportedSoftware p=\"SAE\"";
 				//System.out.println("In SAA");
 				}
-					
+					//
 					else if (comboBox.getSelectedItem().toString() == "Alliance Gateway")
 						{product_name = "SAG";
 						search_builder = "SupportedSoftware p=\"SAG\"";

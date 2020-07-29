@@ -242,7 +242,7 @@ public class LDIF4SoftwareUpdateCheck {
 		JMenuItem mntmAbout = new JMenuItem("About");
 		mntmAbout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Version 1.0\nEditing tool for LDIFF file which is used by the\n feature \"Software Update Version Check\" in\n Swift Alliance Products");
+				JOptionPane.showMessageDialog(null, "Version 1.1\nEditing tool for LDIFF file which is used by the\n feature \"Software Update Version Check\" in\n Swift Alliance Products");
 			}
 		});
 		mnAbout.add(mntmAbout);

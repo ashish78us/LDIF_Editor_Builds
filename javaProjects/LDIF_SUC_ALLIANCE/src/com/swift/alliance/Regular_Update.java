@@ -417,6 +417,7 @@ public class Regular_Update extends JFrame {
 				if (j==-1)	{
 					//JOptionPane.showMessageDialog(null, "Select correct product for this LDIF file");
 					label.setText("File does not match with selected product.");
+					rg_sb="";
 					return;
 				}
 				//else if (sb.toString() != "") {

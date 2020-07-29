@@ -40,7 +40,7 @@ public class LDIF4SoftwareUpdateCheck {
 	private FileDialog fd;
 	private JTextArea textArea;
 	static public String SelectedFile;
-	//static LDIF4SoftwareUpdateCheck own_obj;....
+	//static LDIF4SoftwareUpdateCheck own_obj1;....
 
 	/**
 	 * Launch the application.

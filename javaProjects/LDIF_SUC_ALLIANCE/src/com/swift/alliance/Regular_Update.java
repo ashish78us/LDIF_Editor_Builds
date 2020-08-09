@@ -753,7 +753,7 @@ public class Regular_Update extends JFrame {
 						return;
 						//k = sb.indexOf("</Updates>");
 					}
-					k = sb.indexOf("/>",k);
+					k = sb.indexOf("/>",k);//from where the addition will take place
 				//update_start = sb.lastIndexOf("<", k);
 				//System.out.println(sb.substring(update_start,update_start+1));
 				//update_end= sb.indexOf(">",k);

@@ -63,7 +63,7 @@ public class Yearly_Update extends JFrame {
 		setTitle("Yearly Update");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//setBounds(100, 100, 360, 219);
-		setBounds(700, 500, 355, 215);
+		setBounds(700, 500, 355, 227);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -116,12 +116,12 @@ public class Yearly_Update extends JFrame {
 				}
 			}
 		});
-		textField.setBounds(83, 45, 86, 20);
+		textField.setBounds(66, 45, 86, 20);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
 		JLabel lblFromDate = new JLabel("From Date");
-		lblFromDate.setBounds(191, 48, 66, 14);
+		lblFromDate.setBounds(162, 48, 66, 14);
 		contentPane.add(lblFromDate);
 		
 		textField_1 = new JTextField();
@@ -160,7 +160,7 @@ public class Yearly_Update extends JFrame {
 			}
 		});
 		textField_1.setColumns(10);
-		textField_1.setBounds(258, 45, 86, 20);
+		textField_1.setBounds(221, 45, 86, 20);
 		contentPane.add(textField_1);
 		
 		JLabel lblNewLabel = new JLabel("Base Release");
@@ -560,7 +560,7 @@ public class Yearly_Update extends JFrame {
 				
 			}
 		});
-		btnModify.setBounds(250, 130, 89, 23);
+		btnModify.setBounds(238, 131, 89, 23);
 		contentPane.add(btnModify);
 		
 		JButton btnClearAll = new JButton("Clear All");

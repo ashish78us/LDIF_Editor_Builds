@@ -73,7 +73,7 @@ public class LDIF4SoftwareUpdateCheck {
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.getContentPane().setBackground(Color.WHITE);
-		frame.setBounds(100, 100, 543, 621);
+		frame.setBounds(100, 100, 555, 630);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setTitle("SWIFT Alliance LDIF editor");
@@ -228,9 +228,9 @@ public class LDIF4SoftwareUpdateCheck {
 		scrollPane.setViewportView(textArea);
 		textArea.setAutoscrolls(true);
 		textArea.setBorder(UIManager.getBorder("ScrollPane.border"));
-		textArea.setBackground(Color.LIGHT_GRAY);
+		textArea.setBackground(Color.WHITE);
 		textArea.setEditable(false);
-		textArea.setForeground(new Color(30, 144, 255));
+		textArea.setForeground(new Color(0, 0, 255));
 		
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
@@ -242,7 +242,7 @@ public class LDIF4SoftwareUpdateCheck {
 		JMenuItem mntmAbout = new JMenuItem("About");
 		mntmAbout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Version 1.1\nEditing tool for LDIFF file which is used by the\n feature \"Software Update Version Check\" in\n Swift Alliance Products");
+				JOptionPane.showMessageDialog(null, "Version 1.2\nEditing tool for LDIFF file which is used by the\n feature \"Software Update Version Check\" in\n Swift Alliance Products");
 			}
 		});
 		mnAbout.add(mntmAbout);

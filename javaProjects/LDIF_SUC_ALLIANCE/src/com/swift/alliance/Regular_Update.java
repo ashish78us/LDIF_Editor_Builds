@@ -75,7 +75,7 @@ public class Regular_Update extends JFrame {
 		super("Regular Update");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(700, 100, 346, 370);
+		setBounds(700, 100, 346, 373);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -83,7 +83,7 @@ public class Regular_Update extends JFrame {
 		
 		JLabel label = new JLabel("");
 		label.setForeground(Color.RED);
-		label.setBounds(0, 311, 340, 19);
+		label.setBounds(0, 311, 340, 22);
 		contentPane.add(label);
 		
 		
@@ -413,7 +413,7 @@ public class Regular_Update extends JFrame {
 				}
 				
 				sb = new StringBuilder(rg_sb);
-				int j= sb.indexOf(search_builder);
+				int j= sb.indexOf(search_builder); // checking the product in the file and selected product
 				if (j==-1)	{
 					//JOptionPane.showMessageDialog(null, "Select correct product for this LDIF file");
 					label.setText("File does not match with selected product.");
@@ -421,7 +421,7 @@ public class Regular_Update extends JFrame {
 					return;
 				}
 				//else if (sb.toString() != "") {
-				if (textField_2.getText().length() != 0)
+				if (textField_2.getText().length() != 0 && textField_2.getText().length() >= 6)
 						{
 						k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not return -1
 						//System.out.println("Version="+rg_prod_version+".");
@@ -429,12 +429,14 @@ public class Regular_Update extends JFrame {
 						}
 				else
 						{
-							label.setText("Version field is mandatory.");
+							label.setText("Version field is mandatory and of fixed length(6)");
+							rg_sb="";
 							return;
 						}
 				if (k== -1)
 						{
 							label.setText("Version not found.");
+							rg_sb="";
 							return;
 						}
 								
@@ -499,29 +501,35 @@ public class Regular_Update extends JFrame {
 				if (j==-1)	{
 					//JOptionPane.showMessageDialog(null, "Select correct product for this LDIF file");
 					label.setText("File does not match with selected product.");
+					rg_sb = "";
+					sb = null;
 					return;
 					
 				}
 				
 				rg_prod_version = textField_2.getText();
-				if (textField_2.getText()!= "")
+				if (textField_2.getText().length() != 0 && textField_2.getText().length() >= 6)
 					{
 					k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not return -1
 					
 					}
 				else
 					{
-						label.setText("Version field is empty.");
+						label.setText("Version field is mandatory and of fixed length(6)");
+						rg_sb = "";
+						sb = null;
 						return;
 					}
 				if (k== -1)
 					{
 						label.setText("Version not found.");
+						rg_sb = "";
+						sb = null;
 						return;
 					}
 			
 				
-				k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not return -1
+				//k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not return -1
 				//m = sb.indexOf("/>",k); //check later the boundary. Should not return -1
 				if (k != -1) {
 				update_start = sb.lastIndexOf("<", k);
@@ -580,30 +588,36 @@ public class Regular_Update extends JFrame {
 				if (j==-1)	{
 					//JOptionPane.showMessageDialog(null, "Select correct product for this LDIF file");
 					label.setText("File does not match with selected product.");
+					rg_sb = "";
+					sb = null;
 					return;
 					
 				}
 				label.setText("");
 				rg_prod_version = textField_2.getText();
-				if (textField_2.getText()!= "")
+				if (textField_2.getText().length() != 0 && textField_2.getText().length() >= 6)
 					{
 					k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not return -1
 					
 					}
 				else
 					{
-						label.setText("Version field is empty.");
+						label.setText("Version field is mandatory and of fixed length(6)");
+						rg_sb = "";
+						sb = null;
 						return;
 					}
 				if (k== -1)
 					{
 						label.setText("Version not found.");
+						rg_sb = "";
+						sb = null;
 						return;
 					}
 				
 				
 				
-				k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not return -1
+				//k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not return -1
 				//m = sb.indexOf("/>",k); //check later the boundary. Should not return -1
 				if (k != -1) {
 				update_start = sb.lastIndexOf("<", k);
@@ -630,9 +644,16 @@ public class Regular_Update extends JFrame {
 				
 				//check all elements are present
 					//version check
-				if (textField_2.getText().length() ==0 || textField.getText().length() ==0 || textField_1.getText().length() ==0 || textArea.getText().length() ==0 || int_mand == 2 )
+				if (
+						(textField_2.getText().length() ==0 || textField_2.getText().length() < 6) 
+						|| (textField.getText().length() ==0 || textField.getText().length() <8)
+						|| (textField_1.getText().length() ==0 || textField_1.getText().length() <8) 
+						|| (textArea.getText().length() ==0 ) //|| int_mand == 2
+					)
 				{
-					label.setText("All parameters are mandatory.");
+					label.setText("Fill all parameter.VersionLength=6, DateLength=8.");
+					rg_sb = "";
+					sb = null;
 					return;
 				}
 				String tobe_updated = "<Update t=\""+ textField.getText() +"\" f=\"" + textField_1.getText() + "\" d=\"" + textArea.getText() + "\" m=\"" +  int_mand + "\" n=\"" + textField_2.getText() + "\" k=\"" + str_softsec + "\"/" ;                  
@@ -686,6 +707,8 @@ public class Regular_Update extends JFrame {
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				label.setText("");
+				rg_sb = "";
+				sb = null;
 				String Product_version = JOptionPane.showInputDialog("Input the version after which it will be added in LDIF file");
 				if (Product_version == "")
 				{
@@ -733,7 +756,8 @@ public class Regular_Update extends JFrame {
 				int j= sb.indexOf(search_builder);
 				//System.out.println(j);
 				if (j==-1)	{
-					JOptionPane.showMessageDialog(null, "Select correct product for this LDIF file");
+					//JOptionPane.showMessageDialog(null, "Select correct product for this LDIF file");
+					label.setText("File does not match with selected product.");
 					rg_sb = "";
 					return;
 				}
@@ -776,9 +800,20 @@ public class Regular_Update extends JFrame {
 					int_mand = 0;
 				}
 				
-				if (textField_2.getText().length() ==0 || textField.getText().length() ==0 || textField_1.getText().length() ==0 || textArea.getText().length() ==0 || int_mand == 2 )
+				
+				//if (textField_2.getText().length() ==0 || textField_2.getText().length() <= 6 || textField.getText().length() ==0 || textField.getText().length() <=6 || textField_1.getText().length() ==0 || textField_1.getText().length() <=6 || textArea.getText().length() ==0 || int_mand == 2 )
+				
+				if
+				(
+						(textField_2.getText().length() ==0 || textField_2.getText().length() < 6) 
+						|| (textField.getText().length() ==0 || textField.getText().length() <8)
+						|| (textField_1.getText().length() ==0 || textField_1.getText().length() <8) 
+						|| (textArea.getText().length() ==0) || (int_mand == 2) //|| int_mand == 2
+					)
 				{
-					label.setText("All parameters are mandatory.");
+					label.setText("Fill all parameter.VersionLength=6, DateLength=8.");
+					rg_sb = "";
+					sb = null;
 					return;
 				}
 				
@@ -835,6 +870,7 @@ public class Regular_Update extends JFrame {
 				comboBox_1.setSelectedItem("software");
 				label.setText("");
 				rg_sb = "";
+				sb = null;
 			}
 		});
 		btnClearAll.setBounds(224, 216, 89, 23);

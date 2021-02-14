@@ -28,6 +28,8 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+
+///Update from Virtual Machine
 public class Regular_Update extends JFrame {
 
 	/**

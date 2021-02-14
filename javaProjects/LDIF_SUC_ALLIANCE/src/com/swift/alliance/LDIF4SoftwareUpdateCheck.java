@@ -32,6 +32,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 
+///Update from Virtual Machine
+
 public class LDIF4SoftwareUpdateCheck {
 
 	private JFrame frame;

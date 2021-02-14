@@ -59,9 +59,9 @@ public class Yearly_Update extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Yearly_Update() {
+	public Yearly_Update(LDIF4SoftwareUpdateCheck ldsuc) {
 		setTitle("Yearly Update");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		//setBounds(100, 100, 360, 219);
 		setBounds(700, 500, 355, 227);
 		contentPane = new JPanel();
@@ -396,6 +396,7 @@ public class Yearly_Update extends JFrame {
 				}
 				
 				sb = null;
+			ldsuc.ShowFileContent();
 				
 			}
 		});
@@ -465,7 +466,7 @@ public class Yearly_Update extends JFrame {
 					else
 						label.setText("Record not found");
 			
-				
+				ldsuc.ShowFileContent();
 			}//Action performed close
 		});
 		btnDelete.setBounds(126, 130, 89, 23);
@@ -557,7 +558,7 @@ public class Yearly_Update extends JFrame {
 				
 				
 				
-				
+				ldsuc.ShowFileContent();
 			}
 		});
 		btnModify.setBounds(238, 131, 89, 23);

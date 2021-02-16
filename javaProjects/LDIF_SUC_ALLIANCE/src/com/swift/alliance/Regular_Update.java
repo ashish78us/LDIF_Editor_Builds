@@ -114,7 +114,7 @@ public class Regular_Update extends JFrame {
 		Date today= new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		Date_reg = dateFormat.format(today);
-		JComboBox comboBox_2 = new JComboBox(all_vers);
+		JComboBox<String> comboBox_2 = new JComboBox<String>(all_vers);
 		
 			
 		//System.out.println(Date_reg);

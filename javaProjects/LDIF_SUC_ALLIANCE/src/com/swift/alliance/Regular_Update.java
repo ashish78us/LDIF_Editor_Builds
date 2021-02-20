@@ -309,7 +309,7 @@ public class Regular_Update extends JFrame {
 				
 			}
 		});
-		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"Alliance Web Platform", "Alliance Access", "Alliance Entry", "Alliance Gateway", "SNL"}));
+		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"","Alliance Web Platform", "Alliance Access", "Alliance Entry", "Alliance Gateway", "SNL"}));
 		comboBox.setBounds(144, 11, 179, 20);
 		contentPane.add(comboBox);
 		
@@ -1373,13 +1373,13 @@ public class Regular_Update extends JFrame {
 			
 			if (Integer.parseInt(textField.getText()) < Integer.parseInt(Date_reg))
 			{
-				high.addHighlight(b_to_update+1, d_sof_sec_stop+11, red);
+				high.addHighlight(b_to_update+1+curr_index, d_sof_sec_stop+11+curr_index, red);
 				label.setText("This version is out of support.");
 				
 			}
 			else 
 			{
-				high.addHighlight(b_to_update+1, d_sof_sec_stop+11, color_high);
+				high.addHighlight(b_to_update+1+curr_index, d_sof_sec_stop+11+curr_index, color_high);
 			}
 		} catch (BadLocationException e3) {
 			// TODO Auto-generated catch block

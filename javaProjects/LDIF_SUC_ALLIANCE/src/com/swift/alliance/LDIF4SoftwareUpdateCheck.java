@@ -46,6 +46,7 @@ public class LDIF4SoftwareUpdateCheck {
 	JLabel lblNewLabel = new JLabel("");
 	static LDIF4SoftwareUpdateCheck window1;
 	static DefaultComboBoxModel<String> ds;
+	Regular_Update obj_ru;
 	//static  StringBuilder sb;
 	//static String[] version_arr = new String[20];
 	//static LDIF4SoftwareUpdateCheck own_obj1;....
@@ -196,11 +197,15 @@ public class LDIF4SoftwareUpdateCheck {
 				
 				if (ae.getActionCommand()== "LDIF File")
 				{
+					if (obj_ru != null) {
+						obj_ru.setVisible(false);
+					}
 					fd = new FileDialog(frame, "Select LDIF file", 0);
 					fd.setVisible(true);
 					textField.setText(fd.getFile());
 					textField_1.setText(fd.getDirectory());
 					SelectedFile = fd.getDirectory()+fd.getFile();
+					
 				}
 			}
 			
@@ -211,7 +216,7 @@ public class LDIF4SoftwareUpdateCheck {
 		//JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setBackground(Color.LIGHT_GRAY);
 		lblNewLabel.setForeground(Color.RED);
-		lblNewLabel.setBounds(166, 98, 259, 24);
+		lblNewLabel.setBounds(166, 63, 361, 24);
 		frame.getContentPane().add(lblNewLabel);
 		
 		
@@ -285,7 +290,7 @@ public class LDIF4SoftwareUpdateCheck {
 							//System.out.println("next now=" + next);
 							
 						}	
-						Regular_Update obj_ru = new Regular_Update(ds,textArea, window1);
+						obj_ru = new Regular_Update(ds,textArea, window1);
 						obj_ru.setVisible(true);
 						
 					}
@@ -314,7 +319,7 @@ public class LDIF4SoftwareUpdateCheck {
 				
 			}
 		});
-		btnAdd.setBounds(10, 64, 130, 23);
+		btnAdd.setBounds(10, 98, 146, 23);
 		frame.getContentPane().add(btnAdd);
 		
 		JButton btnYearlyUpdate = new JButton("Yearly Update");
@@ -326,7 +331,7 @@ public class LDIF4SoftwareUpdateCheck {
 				obj_yu.setVisible(true);
 			}
 		});
-		btnYearlyUpdate.setBounds(166, 64, 130, 23);
+		btnYearlyUpdate.setBounds(176, 98, 123, 23);
 		frame.getContentPane().add(btnYearlyUpdate);
 		
 		
@@ -341,7 +346,7 @@ public class LDIF4SoftwareUpdateCheck {
 				}
 			}
 		});
-		btnDisplayFileContent.setBounds(10, 99, 146, 23);
+		btnDisplayFileContent.setBounds(10, 64, 146, 23);
 		frame.getContentPane().add(btnDisplayFileContent);
 		//JScrollPane scroll = new JScrollPane(textArea);
 		//frame.getContentPane().add(scroll);  

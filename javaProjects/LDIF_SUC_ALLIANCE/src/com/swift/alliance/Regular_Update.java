@@ -1,6 +1,5 @@
 package com.swift.alliance;
 
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -38,68 +37,53 @@ import java.awt.event.MouseEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 
-
 ///Update from Virtual Machine
 public class Regular_Update extends JFrame {
 
-	/**
-	 * 
-	 */
-	//testing staging and commit principle
 	private static final long serialVersionUID = 1L;
+//GUI components data members	
 	private JPanel contentPane;
 	private JTextField textField;
 	private JTextField textField_1;
-	private final ButtonGroup buttonGroup = new ButtonGroup();
-	private JTextField textField_2;
-	final int MAX_LENGTH = 99;
-	//private static String rg_fileContents;
-	private static String product_name = "AWP";
+	private ButtonGroup buttonGroup = new ButtonGroup();
+	private JTextField textField_2;	
+	private JLabel label;
+	private JTextArea textArea;
+	private JRadioButton rdbtnNewRadioButton;
+	private JRadioButton rdbtnNo;
+	private JComboBox<String> comboBox;
+	private JComboBox<String> comboBox_1;
+	private JComboBox<String> comboBox_2;
+	
+//Data members used in code	
+	private static String product_name = "";
 	private static String search_builder = "SupportedSoftware p=\"AWP\"";
 	private static String software_type = "Software";
-	private static String rg_prod_version= null;
-	private static String rg_sb ="";
-	private static int k=0,m_stop_desc=0,l_start_desc=0, a_from_update=0, b_to_update=0, c_mand=0, d_sof_sec_start=0,d_sof_sec_stop=0;
-	private static int update_start=0, update_end=0;
-	private static StringBuilder sb ;
-	private static String soft_sec="software";
-	private static int curr_index=0;
-	//private static String[] browse_array = new String[50];
-	//private static String SelVerN;
+	private static String rg_prod_version = "";
+	private static String rg_sb = "";
+	private static int k = 0, m_stop_desc = 0, l_start_desc = 0, a_from_update = 0, b_to_update = 0 ;
+	private static int c_mand = 0, d_sof_sec_start = 0, d_sof_sec_stop = 0, update_start = 0, update_end = 0;
+	private static StringBuilder sb;
+	private static String soft_sec = "software";
+	private static int curr_index = 0;
 	private static String SelVerN;
-	DefaultComboBoxModel<String> all_vers1;
-	JLabel label;
-	JTextArea textArea;
-	JRadioButton rdbtnNewRadioButton;
-	JRadioButton rdbtnNo;
-	JComboBox<String> comboBox_1;
-	Highlighter high;
-	String Date_reg;
+	private static DefaultComboBoxModel<String> all_vers1;
+	private static Highlighter high;
+	private static String Date_reg;
+	private static LDIF4SoftwareUpdateCheck ldsuc1;
+	final int MAX_LENGTH = 99;	
 	
-	
-
-	/**
-	 * Launch the application.
-	 */
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Regular_Update frame = new Regular_Update();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
-
-	/**
-	 * Create the frame.
-	 */
+//Constructor
 	public Regular_Update(DefaultComboBoxModel<String> all_vers, JTextArea jta, LDIF4SoftwareUpdateCheck ldsuc) {
-		
 		super("Regular Update");
+//Initializing data members
+		all_vers1 = all_vers;
+		ldsuc1=ldsuc;				
+		high = jta.getHighlighter();
+		Date today = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		Date_reg = dateFormat.format(today);		
+//JFrame settings				
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(700, 100, 346, 421);
@@ -107,171 +91,16 @@ public class Regular_Update extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		all_vers1=all_vers;
-		
-		//String[] browse_array = all_vers;
-		high = jta.getHighlighter();
-		
-		Date today= new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-		Date_reg = dateFormat.format(today);
-		JComboBox<String> comboBox_2 = new JComboBox<String>(all_vers);
-		
-			
-		//System.out.println(Date_reg);
-		
-		
-		label = new JLabel("");
-		label.setForeground(Color.RED);
-		label.setBounds(0, 359, 340, 22);
-		contentPane.add(label);
-		
-		
-		JLabel lblTillDate = new JLabel("Till Date");
-		lblTillDate.setBounds(10, 115, 46, 14);
-		contentPane.add(lblTillDate);
-		
-		JLabel lblFromDate = new JLabel("From Date");
-		lblFromDate.setBounds(168, 115, 79, 14);
-		contentPane.add(lblFromDate);
-		
-		textField = new JTextField();
-		textField.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				textField.setEditable(true);
-				label.setText("");
-			}
-		});
-		textField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent arg0) {
-				String till_date = textField.getText(); 
-				int length = till_date.length();
-				//char c = arg0.getKeyChar();
-				if (arg0.getKeyChar() >= '0' && arg0.getKeyChar()<='9')
-				{
-					if (length < 8)
-					{
-						textField.setEditable(true);
-					}
-					else
-						textField.setEditable(false);	
-				}
-				else
-				{
-					if (arg0.getExtendedKeyCode() == KeyEvent.VK_BACK_SPACE || arg0.getExtendedKeyCode() == KeyEvent.VK_DELETE )
-					{
-						textField.setEditable(true);
-					}
-					else
-						textField.setEditable(false);
-					//}
-				}
-			}
-		});
-		
-		textField.setBounds(64, 112, 94, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
-		textField.setToolTipText("Format: YYYYMMDD");
-		
-		textField_1 = new JTextField();
-		textField_1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				textField_1.setEditable(true);
-				label.setText("");
-			}
-		});
-		textField_1.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				String from_date = textField_1.getText(); 
-				int length = from_date.length();
-				//char c = arg0.getKeyChar();
-				if (e.getKeyChar() >= '0' && e.getKeyChar()<='9')
-				{
-					if (length < 8)
-					{
-						textField_1.setEditable(true);
-					}
-					else
-						textField_1.setEditable(false);	
-				}
-				else
-				{
-					if (e.getExtendedKeyCode() == KeyEvent.VK_BACK_SPACE || e.getExtendedKeyCode() == KeyEvent.VK_DELETE )
-					{
-						textField_1.setEditable(true);
-					}
-					else
-						textField_1.setEditable(false);
-					//}
-				}
-			}
-		});
-		textField_1.setColumns(10);
-		textField_1.setBounds(229, 112, 94, 20);
-		textField_1.setToolTipText("Format: YYYYMMDD");
-		contentPane.add(textField_1);
-		
-		JLabel lblDescription = new JLabel("Description");
-		lblDescription.setBounds(10, 143, 94, 14);
-		contentPane.add(lblDescription);
-		
-		textArea = new JTextArea();
-		textArea.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				textArea.setEditable(true);
-				label.setText("");
-			}
-		});
-		textArea.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				
-				String description = textArea.getText(); 
-				int length = description.length();
-				label.setText("Description length="+ length);
-				
-				
-				if (length >= 100)
-					{
-						textArea.setEditable(false);
-						label.setText("Maximum character length (100) reached.");	
-						
-					}
-					else 
-						{
-							textArea.setEditable(true);
-							label.setText("Description length="+ length);
-						}
-				if (e.getExtendedKeyCode() == KeyEvent.VK_BACK_SPACE || e.getExtendedKeyCode() == KeyEvent.VK_DELETE )
-				{
-					label.setText("Description length="+ length);
-					textArea.setEditable(true);
-					
-				}
-				
-					
-				
-			}
-		});
-		
-		textArea.setRows(2);
-		textArea.setColumns(50);
-		textArea.setWrapStyleWord(true);
-		textArea.setName("");
-		textArea.setLocale(Locale.UK);
-		textArea.setLineWrap(true);
-		textArea.setTabSize(1);
-		textArea.setBounds(10, 168, 313, 48);
-		contentPane.add(textArea);
-		
-		JComboBox<String> comboBox = new JComboBox<String>();
+//JLabel for selecting product		
+		JLabel lblNewLabel = new JLabel("Select Product");
+		lblNewLabel.setBounds(10, 14, 94, 14);
+		contentPane.add(lblNewLabel);
+//JComboBox for product list		
+		comboBox = new JComboBox<String>();
+		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Select Product", "Alliance Web Platform",
+				"Alliance Access", "Alliance Entry", "Alliance Gateway", "SNL" }));
+		comboBox.setBounds(144, 11, 179, 20);
+		contentPane.add(comboBox);
 		comboBox.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -280,74 +109,39 @@ public class Regular_Update extends JFrame {
 		});
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (comboBox.getSelectedItem().toString() == "Alliance Web Platform")
-				{product_name = "AWP"; 
-				search_builder = "SupportedSoftware p=\"AWP\"";
-				//System.out.println("In AWP");
-				}
-				else if (comboBox.getSelectedItem().toString() == "Alliance Access")
-					{product_name = "SAA";
-					search_builder = "SupportedSoftware p=\"SAA\"";
-					//System.out.println("In SAA");
-					}
-				else if (comboBox.getSelectedItem().toString() == "Alliance Entry")
-				{product_name = "SAE";
-				search_builder = "SupportedSoftware p=\"SAE\"";
-				//System.out.println("In SAA");
-				}
-					//
-					else if (comboBox.getSelectedItem().toString() == "Alliance Gateway")
-						{product_name = "SAG";
-						search_builder = "SupportedSoftware p=\"SAG\"";
-						//System.out.println("In SAG");
-						}
-						else if (comboBox.getSelectedItem().toString() == "SNL")
-							{product_name = "SNL";
-							search_builder = "SupportedSoftware p=\"SNL\"";
-							//System.out.println("In SNL");
-							}
-				
+				product_selection();
 			}
 		});
-		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"","Alliance Web Platform", "Alliance Access", "Alliance Entry", "Alliance Gateway", "SNL"}));
-		comboBox.setBounds(144, 11, 179, 20);
-		contentPane.add(comboBox);
+//JLabel for version drop down
+		JLabel lblVersion_1 = new JLabel("Version Selection");
+		lblVersion_1.setBounds(10, 45, 124, 14);
+		contentPane.add(lblVersion_1);
 		
-		JLabel lblNewLabel = new JLabel("Select Product");
-		lblNewLabel.setBounds(10, 14, 94, 14);
-		contentPane.add(lblNewLabel);
-		
-		JLabel lblMandatory = new JLabel("Mandatory");
-		lblMandatory.setBounds(10, 232, 66, 14);
-		contentPane.add(lblMandatory);
-		
-		rdbtnNewRadioButton = new JRadioButton("Yes");
-		rdbtnNewRadioButton.addMouseListener(new MouseAdapter() {
+//JComboBox for version drop down
+		comboBox_2 = new JComboBox<String>(all_vers);
+		comboBox_2.setBounds(144, 42, 86, 20);
+		contentPane.add(comboBox_2);
+		comboBox_2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				label.setText("");
+				LdifSearch();
 			}
 		});
-		buttonGroup.add(rdbtnNewRadioButton);
-		rdbtnNewRadioButton.setBounds(101, 223, 57, 23);
-		contentPane.add(rdbtnNewRadioButton);
-		
-		rdbtnNo = new JRadioButton("No");
-		rdbtnNo.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				label.setText("");
+		comboBox_2.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent vsel) {
+				LdifSearch();
 			}
-		});
-		buttonGroup.add(rdbtnNo);
-		rdbtnNo.setBounds(168, 227, 46, 14);
-		contentPane.add(rdbtnNo);
-		
+		});		
+//JLabel for version
 		JLabel lblVersion = new JLabel("Version");
 		lblVersion.setBounds(10, 73, 46, 31);
 		contentPane.add(lblVersion);
-		
+
+// JTextField for version number
 		textField_2 = new JTextField(null);
+		textField_2.setBounds(64, 76, 86, 20);
+		contentPane.add(textField_2);
+		textField_2.setColumns(10);
 		textField_2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -358,564 +152,177 @@ public class Regular_Update extends JFrame {
 		textField_2.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
-				
-				String Version_fromgui = textField_2.getText(); 
+
+				String Version_fromgui = textField_2.getText();
 				int length = Version_fromgui.length();
-				
-					if (((arg0.getKeyChar() >= '0' && arg0.getKeyChar()<='9') ||  arg0.getKeyChar()=='.') && length < 6)
-					{
-							textField_2.setEditable(true);
-							label.setText("");
-					}
-					         
-					
-					else 
-						{
-							textField_2.setEditable(false);
-							label.setText("Character not allowed OR length(6) exceeded.");
-							
-						}
-					
-					if (arg0.getExtendedKeyCode() == KeyEvent.VK_BACK_SPACE || arg0.getExtendedKeyCode() == KeyEvent.VK_DELETE )
-						{
-					
-							textField_2.setEditable(true);
-							label.setText("");
-					
-						}
-					
+
+				if (((arg0.getKeyChar() >= '0' && arg0.getKeyChar() <= '9') || arg0.getKeyChar() == '.')
+						&& length < 6) {
+					textField_2.setEditable(true);
+					label.setText("");
+				}
+				else {
+					textField_2.setEditable(false);
+					label.setText("Character not allowed OR length(6) exceeded.");
+
+				}
+				if (arg0.getExtendedKeyCode() == KeyEvent.VK_BACK_SPACE
+						|| arg0.getExtendedKeyCode() == KeyEvent.VK_DELETE) {
+
+					textField_2.setEditable(true);
+					label.setText("");
+				}
 			}
-			
 		});
+//JButton for Search
+		JButton btnSearch = new JButton("Search");
+		btnSearch.setBounds(168, 76, 89, 23);
+		contentPane.add(btnSearch);
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				searchButtonF();
+			}
+		});
+//JLabel for till date
+		JLabel lblTillDate = new JLabel("Till Date");
+		lblTillDate.setBounds(10, 115, 46, 14);
+		contentPane.add(lblTillDate);
+//JText for till date
+		textField = new JTextField();
+		textField.setBounds(64, 112, 94, 20);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		textField.setToolTipText("Format: YYYYMMDD");
+		textField.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				textField.setEditable(true);
+				label.setText("");
+			}
+		});
+		textField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				text_field_const(arg0,textField);
+			}
+		});
+//JLabel for from date
+		JLabel lblFromDate = new JLabel("From Date");
+		lblFromDate.setBounds(168, 115, 79, 14);
+		contentPane.add(lblFromDate);
+//JText for from date
+		textField_1 = new JTextField();
+		textField_1.setColumns(10);
+		textField_1.setBounds(229, 112, 94, 20);
+		textField_1.setToolTipText("Format: YYYYMMDD");
+		contentPane.add(textField_1);
+		textField_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				textField_1.setEditable(true);
+				label.setText("");
+			}
+		});
+		textField_1.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				text_field_const(e,textField_1);
+			}
+		});
+//JLabel for description
+		JLabel lblDescription = new JLabel("Description");
+		lblDescription.setBounds(10, 143, 94, 14);
+		contentPane.add(lblDescription);
 		
-		
-		textField_2.setBounds(64, 76, 86, 20);
-		contentPane.add(textField_2);
-		textField_2.setColumns(10);
-		
-		JLabel lblSoftwareType = new JLabel("Software Type");
-		lblSoftwareType.setBounds(10, 257, 94, 14);
-		contentPane.add(lblSoftwareType);
-		
-		comboBox_1 = new JComboBox<String>();
-		comboBox_1.addMouseListener(new MouseAdapter() {
+//JText for description area
+		textArea = new JTextArea();
+		textArea.setRows(2);
+		textArea.setColumns(50);
+		textArea.setWrapStyleWord(true);
+		textArea.setName("");
+		textArea.setLocale(Locale.UK);
+		textArea.setLineWrap(true);
+		textArea.setTabSize(1);
+		textArea.setBounds(10, 168, 313, 48);
+		contentPane.add(textArea);
+		textArea.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				textArea.setEditable(true);
+				label.setText("");
+			}
+		});
+		textArea.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				String description = textArea.getText();
+				int length = description.length();
+				label.setText("Description length=" + length);
+				if (length >= 100) {
+					textArea.setEditable(false);
+					label.setText("Maximum character length (100) reached.");
+				} else {
+					textArea.setEditable(true);
+					label.setText("Description length=" + length);
+				}
+				if (e.getExtendedKeyCode() == KeyEvent.VK_BACK_SPACE || e.getExtendedKeyCode() == KeyEvent.VK_DELETE) {
+					label.setText("Description length=" + length);
+					textArea.setEditable(true);
+				}
+			}
+		});
+
+//JLabel for Mandatory
+		JLabel lblMandatory = new JLabel("Mandatory");
+		lblMandatory.setBounds(10, 232, 66, 14);
+		contentPane.add(lblMandatory);
+//Radio Button for mandatory "Yes"
+		rdbtnNewRadioButton = new JRadioButton("Yes");
+		rdbtnNewRadioButton.setBounds(101, 223, 57, 23);
+		contentPane.add(rdbtnNewRadioButton);
+		rdbtnNewRadioButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				label.setText("");
+			}
+		});
+//Radio Button for mandatory "No"	
+		rdbtnNo = new JRadioButton("No");
+		rdbtnNo.setBounds(168, 227, 46, 14);
+		contentPane.add(rdbtnNo);
+		rdbtnNo.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				label.setText("");
 			}
 		});
-		comboBox_1.setModel(new DefaultComboBoxModel<String>(new String[] {"software", "security"}));
+//Radio button group
+		buttonGroup.add(rdbtnNewRadioButton);
+		buttonGroup.add(rdbtnNo);
+//JLabel for software type
+		JLabel lblSoftwareType = new JLabel("Software Type");
+		lblSoftwareType.setBounds(10, 257, 94, 14);
+		contentPane.add(lblSoftwareType);
+//JComboBox for software type
+		comboBox_1 = new JComboBox<String>();
+		comboBox_1.setModel(new DefaultComboBoxModel<String>(new String[] { "software", "security" }));
 		comboBox_1.setBounds(101, 254, 89, 20);
 		contentPane.add(comboBox_1);
+		comboBox_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				label.setText("");
+			}
+		});		
 		comboBox_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {				
+			public void actionPerformed(ActionEvent e) {
 				software_type = comboBox_1.getSelectedItem().toString();
-				}			
-		});
-		
-		
-		
-		
-		
-		JButton btnSearch = new JButton("Search");
-		btnSearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				rg_prod_version = textField_2.getText();
-				//System.out.println(rg_prod_version);
-				//String str_version = textField_2.getText();
-				label.setText("");
-				try {
-					
-					
-					FileReader fr_rg_sr = new FileReader(LDIF4SoftwareUpdateCheck.SelectedFile);
-					BufferedReader br_rg_sr = new BufferedReader(fr_rg_sr);
-					
-					
-					int i;
-					
-					while((i=br_rg_sr.read())!=-1){ 
-						rg_sb = rg_sb + (char)i;
-				        
-				        }
-					br_rg_sr.close();
-					fr_rg_sr.close();
-					
-					
-					
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-						label.setText("File I/O exception");
-						else
-							label.setText("File I/O exception");
-					
-				}catch (NullPointerException npe) {
-					if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-						label.setText("Select the file");
-						else
-							label.setText("File not found or file not selected");
-				}
-				
-				sb = new StringBuilder(rg_sb);
-				int j= sb.indexOf(search_builder); // checking the product in the file and selected product
-				if (j==-1)	{
-					//JOptionPane.showMessageDialog(null, "Select correct product for this LDIF file");
-					label.setText("File does not match with selected product.");
-					rg_sb="";
-					return;
-				}
-				//else if (sb.toString() != "") {
-				if (textField_2.getText().length() != 0 && textField_2.getText().length() >= 6)
-						{
-						k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not return -1
-						//System.out.println("Version="+rg_prod_version+".");
-						
-						}
-				else
-						{
-							label.setText("Version field is mandatory and of fixed length(6)");
-							rg_sb="";
-							return;
-						}
-				if (k== -1)
-						{
-							label.setText("Version not found.");
-							rg_sb="";
-							return;
-						}
-								
-				update_start = sb.lastIndexOf("<", k);				
-				update_end= sb.indexOf(">",k);				
-				m_stop_desc = sb.lastIndexOf("\" m=",k);
-				l_start_desc = sb.lastIndexOf("d=",k);
-				a_from_update=sb.lastIndexOf("f=\"", k);
-				b_to_update=sb.lastIndexOf("t=\"", k);					
-				c_mand = sb.lastIndexOf("m=\"", k);
-				d_sof_sec_start = sb.indexOf("k=\"", k);
-				d_sof_sec_stop = sb.indexOf("/>", k);
-				
-				if (l_start_desc >= 0 && m_stop_desc >=0)
-				{textArea.setText(sb.substring(l_start_desc+3,m_stop_desc));} ///setting description
-				else {
-					JOptionPane.showMessageDialog(null, "Search encountered issue. Info: This version number does not exist in file.");
-					return;
-				}
-				
-				textField_1.setText(sb.substring(a_from_update+3,a_from_update+11)); /// setting from date 	
-				textField.setText(sb.substring(b_to_update+3,b_to_update+11)); /// setting to date
-				
-				if (Integer.parseInt(sb.substring(c_mand+3, c_mand+4))==1){					
-					rdbtnNewRadioButton.setSelected(true);
-										
-				}
-				else {
-				rdbtnNo.setSelected(true);
-				
-				}
-				
-				if (sb.substring(d_sof_sec_start+3, d_sof_sec_stop-1).contains(soft_sec)){
-					comboBox_1.setSelectedItem("software");
-					}
-				else {
-					comboBox_1.setSelectedItem("security");
-					
-				}
-				//}//else if
-				k=0;
-				update_start=0;
-				update_end=0;
-				rg_sb = "";
-				label.setText("");
-				//System.out.println(sb.toString());
-				
-				high_function();
-				
-			}
-				
-		});
-		btnSearch.setBounds(168, 76, 89, 23);
-		contentPane.add(btnSearch);
-		
-		JButton btnDelete = new JButton("Delete");
-		btnDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				label.setText("");
-				LdifSearch();
-				if (sb == null) {
-					label.setText("First do search operation on the version.");
-					return;
-				}
-				int j= sb.indexOf(search_builder);
-				if (j==-1)	{
-					//JOptionPane.showMessageDialog(null, "Select correct product for this LDIF file");
-					label.setText("File does not match with selected product.");
-					rg_sb = "";
-					sb = null;
-					return;
-					
-				}
-				
-				rg_prod_version = textField_2.getText();
-				if (textField_2.getText().length() != 0 && textField_2.getText().length() >= 6)
-					{
-					k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not return -1
-					
-					}
-				else
-					{
-						label.setText("Version field is mandatory and of fixed length(6)");
-						rg_sb = "";
-						sb = null;
-						return;
-					}
-				if (k== -1)
-					{
-						label.setText("Version not found.");
-						rg_sb = "";
-						sb = null;
-						return;
-					}
-			
-				
-				//k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not return -1
-				//m = sb.indexOf("/>",k); //check later the boundary. Should not return -1
-				if (k != -1) {
-				update_start = sb.lastIndexOf("<", k);
-				//System.out.println(sb.substring(update_start,update_start+1));
-				update_end= sb.indexOf(">",k);
-				// Add code to check the start and end int for -1 if the version to be modified is not found
-				sb.delete(update_start, update_end+1);
-				
-				try {
-					//FileWriter rg_fw_mod = new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile, false);
-					//BufferedWriter rg_bw_mod = new BufferedWriter(rg_fw_mod.sb.toString());
-					PrintWriter rg_pr_mod = new PrintWriter(new BufferedWriter(new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile)))	;
-					rg_pr_mod.write(sb.toString());
-					rg_pr_mod.close();
-					k=0;
-					update_start=0;
-					update_end=0;
-					rg_sb = "";
-					label.setText("Record Deleted");
-					all_vers.removeElement(rg_prod_version);
-					ldsuc.ShowFileContent();
-					
-					sb = null;
-					
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-						label.setText("File I/O exception");
-						else
-							label.setText("File I/O exception");
-					
-				}catch (NullPointerException npe) {
-					if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-						label.setText("Select the file");
-						else
-							label.setText("File not found or file not selected");
-				}
-				
-				
-				}
-				else
-					label.setText("Record not found");
 			}
 		});
-		btnDelete.setBounds(125, 325, 89, 23);
-		contentPane.add(btnDelete);
-		
-		JButton btnModify = new JButton("Modify");
-		btnModify.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				///use file writer to modify the file
-				//rg_sb = sb.toString();
-				if (sb == null) {
-					label.setText("First do search operation on the version.");
-					return;
-				}
-				label.setText("");
-				int j= sb.indexOf(search_builder);
-				if (j==-1)	{
-					//JOptionPane.showMessageDialog(null, "Select correct product for this LDIF file");
-					label.setText("File does not match with selected product.");
-					rg_sb = "";
-					sb = null;
-					return;
-					
-				}
-				label.setText("");
-				rg_prod_version = textField_2.getText();
-				if (textField_2.getText().length() != 0 && textField_2.getText().length() >= 6)
-					{
-					k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not return -1
-					
-					}
-				else
-					{
-						label.setText("Version field is mandatory and of fixed length(6)");
-						rg_sb = "";
-						sb = null;
-						return;
-					}
-				if (k== -1)
-					{
-						label.setText("Version not found.");
-						rg_sb = "";
-						sb = null;
-						return;
-					}
-				
-				
-				
-				//k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not return -1
-				//m = sb.indexOf("/>",k); //check later the boundary. Should not return -1
-				if (k != -1) {
-				update_start = sb.lastIndexOf("<", k);
-				//System.out.println(sb.substring(update_start,update_start+1));
-				update_end= sb.indexOf(">",k);
-				int int_mand=2;
-				String str_softsec = "";
-				if (comboBox_1.getSelectedIndex() == 0)
-				{
-					str_softsec = "software";
-				}
-				else
-				{
-					str_softsec = "security";
-				}
-				if (rdbtnNewRadioButton.isSelected())
-				{
-					int_mand = 1;
-				}
-				else if (rdbtnNo.isSelected())
-				{
-					int_mand = 0;
-				}
-				
-				//check all elements are present
-					//version check
-				if (
-						(textField_2.getText().length() ==0 || textField_2.getText().length() < 6) 
-						|| (textField.getText().length() ==0 || textField.getText().length() <8)
-						|| (textField_1.getText().length() ==0 || textField_1.getText().length() <8) 
-						|| (textArea.getText().length() ==0 ) //|| int_mand == 2
-					)
-				{
-					label.setText("Fill all parameter.VersionLength=6, DateLength=8.");
-					rg_sb = "";
-					sb = null;
-					return;
-				}
-				String tobe_updated = "<Update t=\""+ textField.getText() +"\" f=\"" + textField_1.getText() + "\" d=\"" + textArea.getText() + "\" m=\"" +  int_mand + "\" n=\"" + textField_2.getText() + "\" k=\"" + str_softsec + "\"/" ;                  
-				// Add code to check the start and end int for -1 if the version to be modified is not found and correct file to update
-				sb.replace(update_start,update_end, tobe_updated);
-				//System.out.println(textArea.getText());
-				//System.out.println(sb.toString());
-				//System.out.println(tobe_updated);
-				try {
-					//FileWriter rg_fw_mod = new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile, false);
-					//BufferedWriter rg_bw_mod = new BufferedWriter(rg_fw_mod.sb.toString());
-					PrintWriter rg_pr_mod = new PrintWriter(new BufferedWriter(new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile)))	;
-					rg_pr_mod.write(sb.toString());
-					rg_pr_mod.close();
-					k=0;
-					update_start=0;
-					update_end=0;
-					rg_sb = "";
-					sb = null;
-					int_mand=2;
-					label.setText("Record Modified");
-					
-					ldsuc.ShowFileContent();
-					high_function();
-					
-					
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-						label.setText("File I/O exception");
-						else
-							label.setText("File I/O exception");
-					
-				}catch (NullPointerException npe) {
-					if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-						label.setText("Select the file");
-						else
-							label.setText("File not found or file not selected");
-				}
-				
-				}
-				else
-					label.setText("Record not found");
-			}
-			
-		});
-		btnModify.setBounds(229, 325, 89, 23);
-		contentPane.add(btnModify);
-		
-		JLabel label_1 = new JLabel("");
-		label_1.setBounds(10, 316, 46, 14);
-		contentPane.add(label_1);
-		
-		JButton btnAdd = new JButton("Add");
-		btnAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				label.setText("");
-				rg_sb = "";
-				sb = null;
-				String Product_version = JOptionPane.showInputDialog("Input the version after which it will be added in LDIF file");
-				if (Product_version == "")
-				{
-					label.setText("Input asked can't be empty.");
-					return;
-				}
-				
-				 //if (sb.toString() != "") {
-				
-				
-				try {
-					
-					
-					FileReader fr_rg_sr = new FileReader(LDIF4SoftwareUpdateCheck.SelectedFile);
-					BufferedReader br_rg_sr = new BufferedReader(fr_rg_sr);
-					
-					
-					int i;
-					
-					while((i=br_rg_sr.read())!=-1){ 
-						rg_sb = rg_sb + (char)i;
-				        
-				        }
-					br_rg_sr.close();
-					fr_rg_sr.close();
-					
-					
-					
-				} catch (IOException e2) {
-					// TODO Auto-generated catch block
-					if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-						label.setText("File I/O exception");
-						else
-							label.setText("File I/O exception");
-					
-				}catch (NullPointerException npe) {
-					if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-						label.setText("Select the file");
-						else
-							label.setText("File not found or file not selected");
-				}
-				
-				sb = new StringBuilder(rg_sb);
-				
-				int j= sb.indexOf(search_builder);
-				//System.out.println(j);
-				if (j==-1)	{
-					//JOptionPane.showMessageDialog(null, "Select correct product for this LDIF file");
-					label.setText("File does not match with selected product.");
-					rg_sb = "";
-					return;
-				}
-				
-				k = sb.indexOf("n=\""+Product_version);//check later the boundary. Should not return -1
-				//m = sb.indexOf("/>",k); //check later the boundary. Should not return -1
-				if (k== -1) {
-					JOptionPane.showMessageDialog(null, "Version not found. Input the correct version\n after which the update record to be added.");
-					rg_sb = "";
-					return;
-					//k = sb.indexOf("</Updates>");
-				}
-				 int p = sb.indexOf("n=\""+textField_2.getText());
-				 if (p != -1) {
-						JOptionPane.showMessageDialog(null, "Version you want to add already exist in the LDIF file");
-						rg_sb = "";
-						return;
-						//k = sb.indexOf("</Updates>");
-					}
-					k = sb.indexOf("/>",k);//from where the addition will take place
-				//update_start = sb.lastIndexOf("<", k);
-				//System.out.println(sb.substring(update_start,update_start+1));
-				//update_end= sb.indexOf(">",k);
-				int int_mand = 2;
-				String str_softsec = "";
-				if (comboBox_1.getSelectedIndex() == 0)
-				{
-					str_softsec = "software";
-				}
-				else
-				{
-					str_softsec = "security";
-				}
-				if (rdbtnNewRadioButton.isSelected())
-				{
-					int_mand = 1;
-				}
-				else if (rdbtnNo.isSelected())
-				{
-					int_mand = 0;
-				}
-				
-				
-				//if (textField_2.getText().length() ==0 || textField_2.getText().length() <= 6 || textField.getText().length() ==0 || textField.getText().length() <=6 || textField_1.getText().length() ==0 || textField_1.getText().length() <=6 || textArea.getText().length() ==0 || int_mand == 2 )
-				
-				if
-				(
-						(textField_2.getText().length() ==0 || textField_2.getText().length() < 6) 
-						|| (textField.getText().length() ==0 || textField.getText().length() <8)
-						|| (textField_1.getText().length() ==0 || textField_1.getText().length() <8) 
-						|| (textArea.getText().length() ==0) || (int_mand == 2) //|| int_mand == 2
-					)
-				{
-					label.setText("Fill all parameter.VersionLength=6, DateLength=8.");
-					rg_sb = "";
-					sb = null;
-					return;
-				}
-				
-				String tobe_added = "<Update t=\""+ textField.getText() +"\" f=\"" + textField_1.getText() + "\" d=\"" + textArea.getText() + "\" m=\"" +  int_mand + "\" n=\"" + textField_2.getText() + "\" k=\"" + str_softsec + "\"/>" ;                  
-				sb.insert(update_start+k+2, tobe_added);
-				//System.out.println(textArea.getText());
-				//System.out.println(sb.toString());
-				//System.out.println(tobe_updated);
-				try {
-					//FileWriter rg_fw_mod = new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile, false);
-					//BufferedWriter rg_bw_mod = new BufferedWriter(rg_fw_mod.sb.toString());
-					PrintWriter rg_pr_mod = new PrintWriter(new BufferedWriter(new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile)))	;
-					rg_pr_mod.write(sb.toString());
-					rg_pr_mod.close();
-					k=0;
-					p=0;
-					update_start=0;
-					update_end=0;
-					rg_sb = "";
-					int_mand = 2;
-					label.setText("Record Added");
-					all_vers.addElement(textField_2.getText());
-					ldsuc.ShowFileContent();    // to refresh File text after addition
-					
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-						label.setText("File I/O exception");
-						else
-							label.setText("File I/O exception");
-					
-				}catch (NullPointerException npe) {
-					if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-						label.setText("Select the file");
-						else
-							label.setText("File not found or file not selected");
-				}
-				
-				sb = null;
-			//}  IF condition
-			}	
-			
-		});
-		btnAdd.setBounds(15, 325, 89, 23);
-		contentPane.add(btnAdd);
-		
+//JButton for CLEAR
 		JButton btnClearAll = new JButton("Clear All");
+		btnClearAll.setBounds(229, 253, 89, 23);
+		contentPane.add(btnClearAll);
 		btnClearAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				textField_2.setText(null);
@@ -930,463 +337,1000 @@ public class Regular_Update extends JFrame {
 				sb = null;
 			}
 		});
-		btnClearAll.setBounds(229, 253, 89, 23);
-		contentPane.add(btnClearAll);
-		
-		
-		comboBox_2.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				
-				
-				
-				LdifSearch();
-			}
-		});
-		
-		
-		
-		
-		
-		comboBox_2.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent vsel) {
-				LdifSearch();
-			}
-		});
-		
-		comboBox_2.setBounds(144, 42, 86, 20);
-		contentPane.add(comboBox_2);
-		
-		JLabel lblVersion_1 = new JLabel("Version Selection");
-		lblVersion_1.setBounds(10, 45, 124, 14);
-		contentPane.add(lblVersion_1);
-		
+//JButton for PREVIOUS
 		JButton btnPrevious = new JButton("Previous");
-		btnPrevious.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//rg_prod_version = textField_2.getText();
-				/*curr_index = all_vers.getIndexOf(textField_2.getText());
-				System.out.println("version=" + textField_2.getText());
-				System.out.println("curr_index=" + curr_index);*/
-				if ((curr_index) == 0) {
-					label.setText("This is the FIRST version in the file.");
-					return;
-					
-				}
-				
-				rg_prod_version = all_vers.getElementAt(curr_index-1) ;
-				
-				//rg_prod_version = browse_array[curr_index-1] ;
-				//System.out.println(rg_prod_version);
-				//String str_version = textField_2.getText();
-				label.setText("");
-				try {
-					
-					
-					FileReader fr_rg_sr = new FileReader(LDIF4SoftwareUpdateCheck.SelectedFile);
-					BufferedReader br_rg_sr = new BufferedReader(fr_rg_sr);
-					
-					
-					int i;
-					
-					while((i=br_rg_sr.read())!=-1){ 
-						rg_sb = rg_sb + (char)i;
-				        
-				        }
-					br_rg_sr.close();
-					fr_rg_sr.close();
-					
-					
-					
-				} catch (IOException ep) {
-					// TODO Auto-generated catch block
-					if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-						label.setText("File I/O exception");
-						else
-							label.setText("File I/O exception");
-					
-				}catch (NullPointerException npe) {
-					if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-						label.setText("Select the file");
-						else
-							label.setText("File not found or file not selected");
-				}
-				
-				sb = new StringBuilder(rg_sb);
-				int j= sb.indexOf(search_builder); // checking the product in the file and selected product
-				if (j==-1)	{
-					//JOptionPane.showMessageDialog(null, "Select correct product for this LDIF file");
-					label.setText("File does not match with selected product.");
-					rg_sb="";
-					return;
-				}
-				//else if (sb.toString() != "") {
-				if (textField_2.getText().length() != 0 && textField_2.getText().length() >= 6)
-						{
-						k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not return -1
-						//System.out.println("Version="+rg_prod_version+".");
-						
-						}
-				else
-						{
-							label.setText("Version field is mandatory and of fixed length(6)");
-							rg_sb="";
-							return;
-						}
-				if (k== -1)
-						{
-							label.setText("Version not found.");
-							rg_sb="";
-							return;
-						}
-								
-				update_start = sb.lastIndexOf("<", k);				
-				update_end= sb.indexOf(">",k);				
-				m_stop_desc = sb.lastIndexOf("\" m=",k);
-				l_start_desc = sb.lastIndexOf("d=",k);
-				a_from_update=sb.lastIndexOf("f=\"", k);
-				b_to_update=sb.lastIndexOf("t=\"", k);					
-				c_mand = sb.lastIndexOf("m=\"", k);
-				d_sof_sec_start = sb.indexOf("k=\"", k);
-				d_sof_sec_stop = sb.indexOf("/>", k);
-				
-				if (l_start_desc >= 0 && m_stop_desc >=0)
-				{textArea.setText(sb.substring(l_start_desc+3,m_stop_desc));} ///setting description
-				else {
-					JOptionPane.showMessageDialog(null, "Search encountered issue. Info: This version number does not exist in file.");
-					return;
-				}
-				textField_2.setText(rg_prod_version);
-				textField_1.setText(sb.substring(a_from_update+3,a_from_update+11)); /// setting from date 	
-				textField.setText(sb.substring(b_to_update+3,b_to_update+11)); /// setting to date
-				
-				if (Integer.parseInt(sb.substring(c_mand+3, c_mand+4))==1){					
-					rdbtnNewRadioButton.setSelected(true);
-										
-				}
-				else {
-				rdbtnNo.setSelected(true);
-				
-				}
-				
-				if (sb.substring(d_sof_sec_start+3, d_sof_sec_stop-1).contains(soft_sec)){
-					comboBox_1.setSelectedItem("software");
-					}
-				else {
-					comboBox_1.setSelectedItem("security");
-					
-				}
-				//}//else if
-				k=0;
-				update_start=0;
-				update_end=0;
-				rg_sb = "";
-				label.setText("");
-				//System.out.println(sb.toString());
-				
-				curr_index = curr_index - 1;
-				high_function();
-				
-			}
-			
-		});
 		btnPrevious.setBounds(61, 291, 89, 23);
 		contentPane.add(btnPrevious);
-		
-		JButton btnNext = new JButton("Next");
-		btnNext.addActionListener(new ActionListener() {
+		btnPrevious.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				int array_count = all_vers.getSize();
-				
-				//int array_count= all_vers.length;
-				//System.out.println(array_count);
-				if ((curr_index) == array_count-1) {
-					label.setText("This is the LAST version in the file.");
-					return;
-					
-					
-				}
-				
-				rg_prod_version = all_vers.getElementAt(curr_index+1) ;
-				//rg_prod_version = browse_array[curr_index+1] ;
-				//System.out.println(rg_prod_version);
-				//String str_version = textField_2.getText();
-				label.setText("");
-				try {
-					
-					
-					FileReader fr_rg_sr = new FileReader(LDIF4SoftwareUpdateCheck.SelectedFile);
-					BufferedReader br_rg_sr = new BufferedReader(fr_rg_sr);
-					
-					
-					int i;
-					
-					while((i=br_rg_sr.read())!=-1){ 
-						rg_sb = rg_sb + (char)i;
-				        
-				        }
-					br_rg_sr.close();
-					fr_rg_sr.close();
-					
-					
-					
-				} catch (IOException en) {
-					// TODO Auto-generated catch block
-					if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-						label.setText("File I/O exception");
-						else
-							label.setText("File I/O exception");
-					
-				}catch (NullPointerException npe) {
-					if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-						label.setText("Select the file");
-						else
-							label.setText("File not found or file not selected");
-				}
-				
-				sb = new StringBuilder(rg_sb);
-				int j= sb.indexOf(search_builder); // checking the product in the file and selected product
-				if (j==-1)	{
-					//JOptionPane.showMessageDialog(null, "Select correct product for this LDIF file");
-					label.setText("File does not match with selected product.");
-					rg_sb="";
-					return;
-				}
-				//else if (sb.toString() != "") {
-				if (textField_2.getText().length() != 0 && textField_2.getText().length() >= 6)
-						{
-						k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not return -1
-						//System.out.println("Version="+rg_prod_version+".");
-						
-						}
-				else
-						{
-							label.setText("Version field is mandatory and of fixed length(6)");
-							rg_sb="";
-							return;
-						}
-				if (k== -1)
-						{
-							label.setText("Version not found.");
-							rg_sb="";
-							return;
-						}
-								
-				update_start = sb.lastIndexOf("<", k);				
-				update_end= sb.indexOf(">",k);				
-				m_stop_desc = sb.lastIndexOf("\" m=",k);
-				l_start_desc = sb.lastIndexOf("d=",k);
-				a_from_update=sb.lastIndexOf("f=\"", k);
-				b_to_update=sb.lastIndexOf("t=\"", k);					
-				c_mand = sb.lastIndexOf("m=\"", k);
-				d_sof_sec_start = sb.indexOf("k=\"", k);
-				d_sof_sec_stop = sb.indexOf("/>", k);
-				
-				if (l_start_desc >= 0 && m_stop_desc >=0)
-				{textArea.setText(sb.substring(l_start_desc+3,m_stop_desc));} ///setting description
-				else {
-					JOptionPane.showMessageDialog(null, "Search encountered issue. Info: This version number does not exist in file.");
-					return;
-				}
-				textField_2.setText(rg_prod_version);
-				textField_1.setText(sb.substring(a_from_update+3,a_from_update+11)); /// setting from date 	
-				textField.setText(sb.substring(b_to_update+3,b_to_update+11)); /// setting to date
-				
-				if (Integer.parseInt(sb.substring(c_mand+3, c_mand+4))==1){					
-					rdbtnNewRadioButton.setSelected(true);
-										
-				}
-				else {
-				rdbtnNo.setSelected(true);
-				
-				}
-				
-				if (sb.substring(d_sof_sec_start+3, d_sof_sec_stop-1).contains(soft_sec)){
-					comboBox_1.setSelectedItem("software");
-					}
-				else {
-					comboBox_1.setSelectedItem("security");
-					
-				}
-				//}//else if
-				k=0;
-				update_start=0;
-				update_end=0;
-				rg_sb = "";
-				label.setText("");
-				//System.out.println(sb.toString());
-				
-			
-				curr_index= curr_index+1;
-				high_function();
+				previous_buttonF();
 			}
-			
-			
 		});
+//JButton for NEXT
+		JButton btnNext = new JButton("Next");
 		btnNext.setBounds(184, 291, 89, 23);
 		contentPane.add(btnNext);
-		
-		
-	}
+		btnNext.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			next_buttonF();
+			}
+		});
+//JBUtton for Add
+		JButton btnAdd = new JButton("Add");
+		btnAdd.setBounds(15, 325, 89, 23);
+		contentPane.add(btnAdd);
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			add_buttonF();				
+			}
+		});
+//JButton for Delete
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.setBounds(125, 325, 89, 23);
+		contentPane.add(btnDelete);
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				delete_buttonF();
+			}
+		});
+//JButton for Modify
+		JButton btnModify = new JButton("Modify");
+		btnModify.setBounds(229, 325, 89, 23);
+		contentPane.add(btnModify);
+		btnModify.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				modify_buttonF();
+			}
+
+		});
+//JLabel for feedback		
+		label = new JLabel("");
+		label.setForeground(Color.RED);
+		label.setBounds(0, 359, 340, 22);
+		contentPane.add(label);
+
+	}// End of Constructor
+
 	public void LdifSearch() {
-		
-		//SelVerN = (String) comboBox_2.getSelectedItem();	
-		SelVerN= (String) all_vers1.getSelectedItem();
-		curr_index= all_vers1.getIndexOf(SelVerN);
-		//curr_index= comboBox_2.getSelectedIndex();
-		
-		//System.out.println(vsel.getSource().toString());
+
+		// SelVerN = (String) comboBox_2.getSelectedItem();
+		SelVerN = (String) all_vers1.getSelectedItem();
+		curr_index = all_vers1.getIndexOf(SelVerN);
+		// curr_index= comboBox_2.getSelectedIndex();
+
+		// System.out.println(vsel.getSource().toString());
 		textField_2.setText(SelVerN);
 		rg_prod_version = SelVerN;
-		//System.out.println(rg_prod_version);
-		//String str_version = textField_2.getText();
+		// System.out.println(rg_prod_version);
+		// String str_version = textField_2.getText();
 		label.setText("");
 		textField_2.setBackground(Color.white);
 		try {
-			
-			
+
 			FileReader fr_rg_sr = new FileReader(LDIF4SoftwareUpdateCheck.SelectedFile);
-			BufferedReader br_rg_sr = new BufferedReader(fr_rg_sr);		
+			BufferedReader br_rg_sr = new BufferedReader(fr_rg_sr);
 			int i;
-			while((i=br_rg_sr.read())!=-1){ 
-				rg_sb = rg_sb + (char)i;
-		        }
+			while ((i = br_rg_sr.read()) != -1) {
+				rg_sb = rg_sb + (char) i;
+			}
 			br_rg_sr.close();
 			fr_rg_sr.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
 				label.setText("File I/O exception");
-				else
-					label.setText("File I/O exception");
-		}catch (NullPointerException npe) {
+			else
+				label.setText("File I/O exception");
+		} catch (NullPointerException npe) {
 			if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
 				label.setText("Select the file");
-				else
-					label.setText("File not found or file not selected");
+			else
+				label.setText("File not found or file not selected");
 		}
-		
+
 		sb = new StringBuilder(rg_sb);
-		int j= sb.indexOf(search_builder); // checking the product in the file and selected product
-		if (j==-1)	{
-			//JOptionPane.showMessageDialog(null, "Select correct product for this LDIF file");
+		int j = sb.indexOf(search_builder); // checking the product in the file and selected product
+		if (j == -1) {
+			// JOptionPane.showMessageDialog(null, "Select correct product for this LDIF
+			// file");
 			label.setText("File does not match with selected product.");
-			rg_sb="";
+			rg_sb = "";
 			return;
 		}
-		//else if (sb.toString() != "") {
-		if (textField_2.getText().length() != 0 && textField_2.getText().length() >= 6)
-				{
-				k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not return -1
-				//System.out.println("Version="+rg_prod_version+".");
-				
-				}
-		else
-				{
-					label.setText("Version field is mandatory and of fixed length(6)");
-					rg_sb="";
-					return;
-				}
-		if (k== -1)
-				{
-					label.setText("Version not found.");
-					rg_sb="";
-					textField_2.setBackground(Color.red);
-					return;
-				}
-						
-		update_start = sb.lastIndexOf("<", k);				
-		update_end= sb.indexOf(">",k);				
-		m_stop_desc = sb.lastIndexOf("\" m=",k);
-		l_start_desc = sb.lastIndexOf("d=",k);
-		a_from_update=sb.lastIndexOf("f=\"", k);
-		b_to_update=sb.lastIndexOf("t=\"", k);					
+		// else if (sb.toString() != "") {
+		if (textField_2.getText().length() != 0 && textField_2.getText().length() >= 6) {
+			k = sb.indexOf("n=\"" + rg_prod_version);// check later the boundary. Should not return -1
+			// System.out.println("Version="+rg_prod_version+".");
+
+		} else {
+			label.setText("Version field is mandatory and of fixed length(6)");
+			rg_sb = "";
+			return;
+		}
+		if (k == -1) {
+			label.setText("Version not found.");
+			rg_sb = "";
+			textField_2.setBackground(Color.red);
+			return;
+		}
+
+		update_start = sb.lastIndexOf("<", k);
+		update_end = sb.indexOf(">", k);
+		m_stop_desc = sb.lastIndexOf("\" m=", k);
+		l_start_desc = sb.lastIndexOf("d=", k);
+		a_from_update = sb.lastIndexOf("f=\"", k);
+		b_to_update = sb.lastIndexOf("t=\"", k);
 		c_mand = sb.lastIndexOf("m=\"", k);
 		d_sof_sec_start = sb.indexOf("k=\"", k);
 		d_sof_sec_stop = sb.indexOf("/>", k);
-		
-		
-		
-		
-		
-		//System.out.println(sb.substring(end_bb+3,end_bb+9));
-		
-		
-		
-		
-		if (l_start_desc >= 0 && m_stop_desc >=0)
-		{textArea.setText(sb.substring(l_start_desc+3,m_stop_desc));} ///setting description
+
+		// System.out.println(sb.substring(end_bb+3,end_bb+9));
+
+		if (l_start_desc >= 0 && m_stop_desc >= 0) {
+			textArea.setText(sb.substring(l_start_desc + 3, m_stop_desc));
+		} /// setting description
 		else {
-			JOptionPane.showMessageDialog(null, "Search encountered issue. Info: This version number does not exist in file.");
+			JOptionPane.showMessageDialog(null,
+					"Search encountered issue. Info: This version number does not exist in file.");
 			return;
 		}
-		
-		textField_1.setText(sb.substring(a_from_update+3,a_from_update+11)); /// setting from date 	
-		textField.setText(sb.substring(b_to_update+3,b_to_update+11)); /// setting to date
-		
-		if (Integer.parseInt(sb.substring(c_mand+3, c_mand+4))==1){					
+
+		textField_1.setText(sb.substring(a_from_update + 3, a_from_update + 11)); /// setting from date
+		textField.setText(sb.substring(b_to_update + 3, b_to_update + 11)); /// setting to date
+
+		if (Integer.parseInt(sb.substring(c_mand + 3, c_mand + 4)) == 1) {
 			rdbtnNewRadioButton.setSelected(true);
-								
+
+		} else {
+			rdbtnNo.setSelected(true);
+
 		}
-		else {
-		rdbtnNo.setSelected(true);
-		
-		}
-		
-		if (sb.substring(d_sof_sec_start+3, d_sof_sec_stop-1).contains(soft_sec)){
+
+		if (sb.substring(d_sof_sec_start + 3, d_sof_sec_stop - 1).contains(soft_sec)) {
 			comboBox_1.setSelectedItem("software");
-			}
-		else {
+		} else {
 			comboBox_1.setSelectedItem("security");
-			
+
 		}
-		//}//else if
-		k=0;
-		update_start=0;
-		update_end=0;
+		// }//else if
+		k = 0;
+		update_start = 0;
+		update_end = 0;
 		rg_sb = "";
 		label.setText("");
-		
+
 		high_function();
-		
-		
-/*				high.removeAllHighlights();
-		try {
-			HighlightPainter color_high = new DefaultHighlighter.DefaultHighlightPainter(Color.GREEN);
-			high.addHighlight(b_to_update+1, d_sof_sec_stop+11, color_high);
-		} catch (BadLocationException e3) {
-			// TODO Auto-generated catch block
-			System.out.println("a_from_update=" + a_from_update);
-			System.out.println("b_to_update=" + b_to_update);
-			e3.printStackTrace();
-		}*/
-		//System.out.println(sb.toString());
-		
-	}
-	
+
+		/*
+		 * high.removeAllHighlights(); try { HighlightPainter color_high = new
+		 * DefaultHighlighter.DefaultHighlightPainter(Color.GREEN);
+		 * high.addHighlight(b_to_update+1, d_sof_sec_stop+11, color_high); } catch
+		 * (BadLocationException e3) { // TODO Auto-generated catch block
+		 * System.out.println("a_from_update=" + a_from_update);
+		 * System.out.println("b_to_update=" + b_to_update); e3.printStackTrace(); }
+		 */
+		// System.out.println(sb.toString());
+
+	}// end of LdifSearch()
 	public void high_function() {
 		high.removeAllHighlights();
 		try {
 			HighlightPainter color_high = new DefaultHighlighter.DefaultHighlightPainter(Color.GREEN);
 			HighlightPainter red = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
-			
-			if (Integer.parseInt(textField.getText()) < Integer.parseInt(Date_reg))
-			{
-				high.addHighlight(b_to_update+1+curr_index, d_sof_sec_stop+11+curr_index, red);
+
+			if (Integer.parseInt(textField.getText()) < Integer.parseInt(Date_reg)) {
+				high.addHighlight(b_to_update + 1 + curr_index, d_sof_sec_stop + 11 + curr_index, red);
 				label.setText("This version is out of support.");
-				
-			}
-			else 
-			{
-				high.addHighlight(b_to_update+1+curr_index, d_sof_sec_stop+11+curr_index, color_high);
+
+			} else {
+				high.addHighlight(b_to_update + 1 + curr_index, d_sof_sec_stop + 11 + curr_index, color_high);
 			}
 		} catch (BadLocationException e3) {
 			// TODO Auto-generated catch block
-			/*System.out.println("a_from_update=" + a_from_update);
-			System.out.println("b_to_update=" + b_to_update);*/
+			/*
+			 * System.out.println("a_from_update=" + a_from_update);
+			 * System.out.println("b_to_update=" + b_to_update);
+			 */
 			e3.printStackTrace();
 		}
-	}
-	
-}
+	} // End of high_function()	
+	public void text_field_const(KeyEvent arg0, JTextField textField) {
+		String till_date = textField.getText();
+		int length = till_date.length();
+		// char c = arg0.getKeyChar();
+		if (arg0.getKeyChar() >= '0' && arg0.getKeyChar() <= '9') {
+			if (length < 8) {
+				textField.setEditable(true);
+			} else
+				textField.setEditable(false);
+		} else {
+			if (arg0.getExtendedKeyCode() == KeyEvent.VK_BACK_SPACE
+					|| arg0.getExtendedKeyCode() == KeyEvent.VK_DELETE) {
+				textField.setEditable(true);
+			} else
+				textField.setEditable(false);
+			// }
+		}
+	}// End of text_field_const	
+	public void product_selection() {
+		if (comboBox.getSelectedItem().toString() == "Alliance Web Platform") {
+			product_name = "AWP";
+			search_builder = "SupportedSoftware p=\"AWP\"";
+			// System.out.println("In AWP");
+		} else if (comboBox.getSelectedItem().toString() == "Alliance Access") {
+			product_name = "SAA";
+			search_builder = "SupportedSoftware p=\"SAA\"";
+			// System.out.println("In SAA");
+		} else if (comboBox.getSelectedItem().toString() == "Alliance Entry") {
+			product_name = "SAE";
+			search_builder = "SupportedSoftware p=\"SAE\"";
+			// System.out.println("In SAA");
+		}
+		//
+		else if (comboBox.getSelectedItem().toString() == "Alliance Gateway") {
+			product_name = "SAG";
+			search_builder = "SupportedSoftware p=\"SAG\"";
+			// System.out.println("In SAG");
+		} else if (comboBox.getSelectedItem().toString() == "SNL") {
+			product_name = "SNL";
+			search_builder = "SupportedSoftware p=\"SNL\"";
+			// System.out.println("In SNL");
+		}
+	} // End of product_selection()
+	public void searchButtonF() {
+		rg_prod_version = textField_2.getText();
+		// System.out.println(rg_prod_version);
+		// String str_version = textField_2.getText();
+		label.setText("");
+		try {
+
+			FileReader fr_rg_sr = new FileReader(LDIF4SoftwareUpdateCheck.SelectedFile);
+			BufferedReader br_rg_sr = new BufferedReader(fr_rg_sr);
+
+			int i;
+
+			while ((i = br_rg_sr.read()) != -1) {
+				rg_sb = rg_sb + (char) i;
+
+			}
+			br_rg_sr.close();
+			fr_rg_sr.close();
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
+				label.setText("File I/O exception");
+			else
+				label.setText("File I/O exception");
+
+		} catch (NullPointerException npe) {
+			if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
+				label.setText("Select the file");
+			else
+				label.setText("File not found or file not selected");
+		}
+
+		sb = new StringBuilder(rg_sb);
+		int j = sb.indexOf(search_builder); // checking the product in the file and selected product
+		if (j == -1) {
+			// JOptionPane.showMessageDialog(null, "Select correct product for this LDIF
+			// file");
+			label.setText("File does not match with selected product.");
+			rg_sb = "";
+			return;
+		}
+		// else if (sb.toString() != "") {
+		if (textField_2.getText().length() != 0 && textField_2.getText().length() >= 6) {
+			k = sb.indexOf("n=\"" + rg_prod_version);// check later the boundary. Should not return -1
+			// System.out.println("Version="+rg_prod_version+".");
+
+		} else {
+			label.setText("Version field is mandatory and of fixed length(6)");
+			rg_sb = "";
+			return;
+		}
+		if (k == -1) {
+			label.setText("Version not found.");
+			rg_sb = "";
+			return;
+		}
+
+		update_start = sb.lastIndexOf("<", k);
+		update_end = sb.indexOf(">", k);
+		m_stop_desc = sb.lastIndexOf("\" m=", k);
+		l_start_desc = sb.lastIndexOf("d=", k);
+		a_from_update = sb.lastIndexOf("f=\"", k);
+		b_to_update = sb.lastIndexOf("t=\"", k);
+		c_mand = sb.lastIndexOf("m=\"", k);
+		d_sof_sec_start = sb.indexOf("k=\"", k);
+		d_sof_sec_stop = sb.indexOf("/>", k);
+
+		if (l_start_desc >= 0 && m_stop_desc >= 0) {
+			textArea.setText(sb.substring(l_start_desc + 3, m_stop_desc));
+		} /// setting description
+		else {
+			JOptionPane.showMessageDialog(null,
+					"Search encountered issue. Info: This version number does not exist in file.");
+			return;
+		}
+
+		textField_1.setText(sb.substring(a_from_update + 3, a_from_update + 11)); /// setting from date
+		textField.setText(sb.substring(b_to_update + 3, b_to_update + 11)); /// setting to date
+
+		if (Integer.parseInt(sb.substring(c_mand + 3, c_mand + 4)) == 1) {
+			rdbtnNewRadioButton.setSelected(true);
+
+		} else {
+			rdbtnNo.setSelected(true);
+
+		}
+
+		if (sb.substring(d_sof_sec_start + 3, d_sof_sec_stop - 1).contains(soft_sec)) {
+			comboBox_1.setSelectedItem("software");
+		} else {
+			comboBox_1.setSelectedItem("security");
+
+		}
+		// }//else if
+		k = 0;
+		update_start = 0;
+		update_end = 0;
+		rg_sb = "";
+		label.setText("");
+		// System.out.println(sb.toString());
+
+		high_function();
+	} // End of searchButtonF()
+	public void previous_buttonF() {
+		if ((curr_index) == 0) {
+			label.setText("This is the FIRST version in the file.");
+			return;
+		}
+		rg_prod_version = all_vers1.getElementAt(curr_index - 1);				
+		label.setText("");
+		try {
+			FileReader fr_rg_sr = new FileReader(LDIF4SoftwareUpdateCheck.SelectedFile);
+			BufferedReader br_rg_sr = new BufferedReader(fr_rg_sr);
+			int i;
+			while ((i = br_rg_sr.read()) != -1) {
+				rg_sb = rg_sb + (char) i;
+			}
+			br_rg_sr.close();
+			fr_rg_sr.close();
+		} catch (IOException ep) {
+			// TODO Auto-generated catch block
+			if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
+				label.setText("File I/O exception");
+			else
+				label.setText("File I/O exception");
+		} catch (NullPointerException npe) {
+			if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
+				label.setText("Select the file");
+			else
+				label.setText("File not found or file not selected");
+		}
+		sb = new StringBuilder(rg_sb);
+		int j = sb.indexOf(search_builder); // checking the product in the file and selected product
+		if (j == -1) {
+			label.setText("File does not match with selected product.");
+			rg_sb = "";
+			return;
+		}
+		if (textField_2.getText().length() != 0 && textField_2.getText().length() >= 6) {
+			k = sb.indexOf("n=\"" + rg_prod_version);// check later the boundary. Should not return -1
+			} 
+		else {
+			label.setText("Version field is mandatory and of fixed length(6)");
+			rg_sb = "";
+			return;
+		}
+		if (k == -1) {
+			label.setText("Version not found.");
+			rg_sb = "";
+			return;
+		}
+		update_start = sb.lastIndexOf("<", k);
+		update_end = sb.indexOf(">", k);
+		m_stop_desc = sb.lastIndexOf("\" m=", k);
+		l_start_desc = sb.lastIndexOf("d=", k);
+		a_from_update = sb.lastIndexOf("f=\"", k);
+		b_to_update = sb.lastIndexOf("t=\"", k);
+		c_mand = sb.lastIndexOf("m=\"", k);
+		d_sof_sec_start = sb.indexOf("k=\"", k);
+		d_sof_sec_stop = sb.indexOf("/>", k);
+		if (l_start_desc >= 0 && m_stop_desc >= 0) {
+			textArea.setText(sb.substring(l_start_desc + 3, m_stop_desc));
+		} /// setting description
+		else {
+			JOptionPane.showMessageDialog(null,
+					"Search encountered issue. Info: This version number does not exist in file.");
+			return;
+		}
+		textField_2.setText(rg_prod_version);
+		textField_1.setText(sb.substring(a_from_update + 3, a_from_update + 11)); /// setting from date
+		textField.setText(sb.substring(b_to_update + 3, b_to_update + 11)); /// setting to date
+		if (Integer.parseInt(sb.substring(c_mand + 3, c_mand + 4)) == 1) {
+			rdbtnNewRadioButton.setSelected(true);
+		} else {
+			rdbtnNo.setSelected(true);
+		}
+		if (sb.substring(d_sof_sec_start + 3, d_sof_sec_stop - 1).contains(soft_sec)) {
+			comboBox_1.setSelectedItem("software");
+		} else {
+			comboBox_1.setSelectedItem("security");
+		}				
+		k = 0;
+		update_start = 0;
+		update_end = 0;
+		rg_sb = "";
+		label.setText("");
+		curr_index = curr_index - 1;
+		high_function();
+	} // End of previous_buttonF()
+	public void next_buttonF() {
+		int array_count = all_vers1.getSize();
+		if ((curr_index) == array_count - 1) {
+			label.setText("This is the LAST version in the file.");
+			return;
+		}
+		rg_prod_version = all_vers1.getElementAt(curr_index + 1);
+		label.setText("");
+		try {
+			FileReader fr_rg_sr = new FileReader(LDIF4SoftwareUpdateCheck.SelectedFile);
+			BufferedReader br_rg_sr = new BufferedReader(fr_rg_sr);
+			int i;
+			while ((i = br_rg_sr.read()) != -1) {
+				rg_sb = rg_sb + (char) i;
+			}
+			br_rg_sr.close();
+			fr_rg_sr.close();
+
+		} catch (IOException en) {
+			// TODO Auto-generated catch block
+			if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
+				label.setText("File I/O exception");
+			else
+				label.setText("File I/O exception");
+
+		} catch (NullPointerException npe) {
+			if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
+				label.setText("Select the file");
+			else
+				label.setText("File not found or file not selected");
+		}
+
+		sb = new StringBuilder(rg_sb);
+		int j = sb.indexOf(search_builder); // checking the product in the file and selected product
+		if (j == -1) {
+			// JOptionPane.showMessageDialog(null, "Select correct product for this LDIF
+			// file");
+			label.setText("File does not match with selected product.");
+			rg_sb = "";
+			return;
+		}
+		// else if (sb.toString() != "") {
+		if (textField_2.getText().length() != 0 && textField_2.getText().length() >= 6) {
+			k = sb.indexOf("n=\"" + rg_prod_version);// check later the boundary. Should not return -1
+			// System.out.println("Version="+rg_prod_version+".");
+
+		} else {
+			label.setText("Version field is mandatory and of fixed length(6)");
+			rg_sb = "";
+			return;
+		}
+		if (k == -1) {
+			label.setText("Version not found.");
+			rg_sb = "";
+			return;
+		}
+
+		update_start = sb.lastIndexOf("<", k);
+		update_end = sb.indexOf(">", k);
+		m_stop_desc = sb.lastIndexOf("\" m=", k);
+		l_start_desc = sb.lastIndexOf("d=", k);
+		a_from_update = sb.lastIndexOf("f=\"", k);
+		b_to_update = sb.lastIndexOf("t=\"", k);
+		c_mand = sb.lastIndexOf("m=\"", k);
+		d_sof_sec_start = sb.indexOf("k=\"", k);
+		d_sof_sec_stop = sb.indexOf("/>", k);
+
+		if (l_start_desc >= 0 && m_stop_desc >= 0) {
+			textArea.setText(sb.substring(l_start_desc + 3, m_stop_desc));
+		} /// setting description
+		else {
+			JOptionPane.showMessageDialog(null,
+					"Search encountered issue. Info: This version number does not exist in file.");
+			return;
+		}
+		textField_2.setText(rg_prod_version);
+		textField_1.setText(sb.substring(a_from_update + 3, a_from_update + 11)); /// setting from date
+		textField.setText(sb.substring(b_to_update + 3, b_to_update + 11)); /// setting to date
+
+		if (Integer.parseInt(sb.substring(c_mand + 3, c_mand + 4)) == 1) {
+			rdbtnNewRadioButton.setSelected(true);
+
+		} else {
+			rdbtnNo.setSelected(true);
+
+		}
+
+		if (sb.substring(d_sof_sec_start + 3, d_sof_sec_stop - 1).contains(soft_sec)) {
+			comboBox_1.setSelectedItem("software");
+		} else {
+			comboBox_1.setSelectedItem("security");
+
+		}
+		// }//else if
+		k = 0;
+		update_start = 0;
+		update_end = 0;
+		rg_sb = "";
+		label.setText("");
+		// System.out.println(sb.toString());
+
+		curr_index = curr_index + 1;
+		high_function();
+	} // End of next_buttonF()
+	public void add_buttonF() {
+		label.setText("");
+		rg_sb = "";
+		sb = null;
+		String Product_version_add = textField_2.getText();
+		String Product_version = "";
+		// System.out.println(textField_2.getText());
+		
+		try {
+
+			FileReader fr_rg_sr = new FileReader(LDIF4SoftwareUpdateCheck.SelectedFile);
+			BufferedReader br_rg_sr = new BufferedReader(fr_rg_sr);
+
+			int i;
+
+			while ((i = br_rg_sr.read()) != -1) {
+				rg_sb = rg_sb + (char) i;
+
+			}
+			br_rg_sr.close();
+			fr_rg_sr.close();
+
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
+				label.setText("File I/O exception");
+			else
+				label.setText("File I/O exception");
+
+		} catch (NullPointerException npe) {
+			if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
+				label.setText("Select the file");
+			else
+				label.setText("File not found or file not selected");
+		}
+
+		sb = new StringBuilder(rg_sb);
+
+		int j = sb.indexOf(search_builder);
+		// System.out.println(j);
+		if (j == -1) {
+			// JOptionPane.showMessageDialog(null, "Select correct product for this LDIF
+			// file");
+			label.setText("File does not match with selected product.");
+			rg_sb = "";
+			return;
+		}
+
+		k = sb.indexOf("n=\"" + Product_version_add);// check later the boundary. Should not return -1
+		// m = sb.indexOf("/>",k); //check later the boundary. Should not return -1
+		if (k != -1) {
+			JOptionPane.showMessageDialog(null, "Version already exist.");
+			// Working area
+			rg_sb = "";
+			LdifSearch();
+			high_function();
+			return;
+			// k = sb.indexOf("</Updates>");
+		} else  {
+
+			//System.out.println(all_vers1.getSize());
+			//for (int r=0;r<=all_vers1.getSize();r++) {
+			int row_num_where_tobAdded = 0;
+			int start_new_record_high = 0;
+			int last_highlight = 0;
+			for (int r=0;r<all_vers1.getSize();r++) {
+				String version_to_compare ="";
+				String version_to_add = "";
+				version_to_compare = version_to_compare.concat(all_vers1.getElementAt(r).substring(0,1));
+				version_to_compare = version_to_compare.concat(all_vers1.getElementAt(r).substring(2,3));
+				version_to_compare = version_to_compare.concat(all_vers1.getElementAt(r).substring(4,5));
+				version_to_compare = version_to_compare.concat(all_vers1.getElementAt(r).substring(5,6));
+				//System.out.println(version_to_compare);
+				version_to_add = version_to_add.concat(Product_version_add.substring(0,1));
+				version_to_add = version_to_add.concat(Product_version_add.substring(2,3));
+				version_to_add = version_to_add.concat(Product_version_add.substring(4,5));
+				version_to_add = version_to_add.concat(Product_version_add.substring(5,6));
+				//System.out.println(version_to_add);
+				
+				
+				if (Integer.parseInt(version_to_compare) > Integer.parseInt(version_to_add)   )
+				{
+					row_num_where_tobAdded = r;
+					//System.out.println("Row=" +r);
+					//System.out.println(all_vers1.getElementAt(r-1));
+					Product_version = all_vers1.getElementAt(r-1);
+					k = sb.indexOf("n=\""+Product_version);
+					k = sb.indexOf("/>",k);//from where the addition will take place
+					
+					int int_mand = 2;
+					String str_softsec = "";
+					if (comboBox_1.getSelectedIndex() == 0)
+					{
+						str_softsec = "software";
+					}
+					else
+					{
+						str_softsec = "security";
+					}
+					if (rdbtnNewRadioButton.isSelected())
+					{
+						int_mand = 1;
+					}
+					else if (rdbtnNo.isSelected())
+					{
+						int_mand = 0;
+					}	
+					
+					if
+					(
+							(textField_2.getText().length() ==0 || textField_2.getText().length() < 6) 
+							|| (textField.getText().length() ==0 || textField.getText().length() <8)
+							|| (textField_1.getText().length() ==0 || textField_1.getText().length() <8) 
+							|| (textArea.getText().length() ==0) || (int_mand == 2) //|| int_mand == 2
+						)
+					{
+						label.setText("Fill all parameter.VersionLength=6, DateLength=8.");
+						rg_sb = "";
+						sb = null;
+						return;
+					}
+					
+					String tobe_added = "<Update t=\""+ textField.getText() +"\" f=\"" + textField_1.getText() + "\" d=\"" + textArea.getText() + "\" m=\"" +  int_mand + "\" n=\"" + textField_2.getText() + "\" k=\"" + str_softsec + "\"/>" ;                  
+					sb.insert(update_start+k+2, tobe_added);
+					
+					try {
+						//FileWriter rg_fw_mod = new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile, false);
+						//BufferedWriter rg_bw_mod = new BufferedWriter(rg_fw_mod.sb.toString());
+						PrintWriter rg_pr_mod = new PrintWriter(new BufferedWriter(new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile)))	;
+						rg_pr_mod.write(sb.toString());
+						rg_pr_mod.close();
+						k=0;
+						//p=0;
+						update_start=0;
+						update_end=0;
+						rg_sb = "";
+						int_mand = 2;
+						label.setText("Record Added");
+						curr_index = r +1;
+						//comboBox_2.setSelectedItem(textField_2.getText());
+						//comboBox_2.setSelectedIndex(r-1);
+						all_vers1.addElement(textField_2.getText());
+						ldsuc1.ShowFileContent();    // to refresh File text after addition
+						
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
+							label.setText("File I/O exception");
+							else
+								label.setText("File I/O exception");
+						
+					}catch (NullPointerException npe) {
+						if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
+							label.setText("Select the file");
+							else
+								label.setText("File not found or file not selected");
+					}
+					
+					sb = null;
+					ldsuc1.ShowFileContent();
+					LDIF4SoftwareUpdateCheck.obj_ru.dispose();
+					ldsuc1.reg_upd_fn();
+					high_function();
+					
+					//high_function();
+					return;
+				}
+				else if (r>=(all_vers1.getSize()-1)) {
+					//System.out.println("inside else loop");
+					Product_version = all_vers1.getElementAt(all_vers1.getSize()-1);
+					//System.out.println("Product_Version=" + Product_version);
+					k = sb.indexOf("n=\""+Product_version);
+					k = sb.indexOf("/>",k);//from where the addition will take place
+					
+					int int_mand = 2;
+					String str_softsec = "";
+					if (comboBox_1.getSelectedIndex() == 0)
+					{
+						str_softsec = "software";
+					}
+					else
+					{
+						str_softsec = "security";
+					}
+					if (rdbtnNewRadioButton.isSelected())
+					{
+						int_mand = 1;
+					}
+					else if (rdbtnNo.isSelected())
+					{
+						int_mand = 0;
+					}
+					
+					
+					//if (textField_2.getText().length() ==0 || textField_2.getText().length() <= 6 || textField.getText().length() ==0 || textField.getText().length() <=6 || textField_1.getText().length() ==0 || textField_1.getText().length() <=6 || textArea.getText().length() ==0 || int_mand == 2 )
+					
+					if
+					(
+							(textField_2.getText().length() ==0 || textField_2.getText().length() < 6) 
+							|| (textField.getText().length() ==0 || textField.getText().length() <8)
+							|| (textField_1.getText().length() ==0 || textField_1.getText().length() <8) 
+							|| (textArea.getText().length() ==0) || (int_mand == 2) //|| int_mand == 2
+						)
+					{
+						label.setText("Fill all parameter.VersionLength=6, DateLength=8.");
+						rg_sb = "";
+						sb = null;
+						k=0;
+						return;
+					}
+					
+					String tobe_added = "<Update t=\""+ textField.getText() +"\" f=\"" + textField_1.getText() + "\" d=\"" + textArea.getText() + "\" m=\"" +  int_mand + "\" n=\"" + textField_2.getText() + "\" k=\"" + str_softsec + "\"/>" ;                  
+					
+					sb.insert(k+2, tobe_added);
+					curr_index = r +1;
+					k = sb.indexOf("n=\""+Product_version_add);
+					start_new_record_high = sb.lastIndexOf("<",k);
+					//System.out.println("start_new_record_high=" + start_new_record_high);
+					last_highlight = sb.indexOf("/>",k);
+					//System.out.println("lastHigjloght="+ last_highlight);
+					
+					try {
+						//FileWriter rg_fw_mod = new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile, false);
+						//BufferedWriter rg_bw_mod = new BufferedWriter(rg_fw_mod.sb.toString());
+						PrintWriter rg_pr_mod = new PrintWriter(new BufferedWriter(new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile)))	;
+						rg_pr_mod.write(sb.toString());
+						rg_pr_mod.close();
+						//k=0;
+						//p=0;
+						
+						update_start=0;
+						update_end=0;
+						rg_sb = "";
+						int_mand = 2;
+						sb = null;
+						//comboBox_2.setSelectedItem(textField_2.getText());
+						comboBox_2.setSelectedIndex(r);
+						label.setText("Record Added");
+						
+						all_vers1.addElement(textField_2.getText());
+						ldsuc1.ShowFileContent();    // to refresh File text after addition
+						
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
+							label.setText("File I/O exception");
+							else
+								label.setText("File I/O exception");
+						
+					}catch (NullPointerException npe) {
+						if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
+							label.setText("Select the file");
+							else
+								label.setText("File not found or file not selected");
+					}					
+					ldsuc1.ShowFileContent();
+					high_function();
+					LDIF4SoftwareUpdateCheck.obj_ru.dispose();
+					ldsuc1.reg_upd_fn();
+					return;					
+				}				
+			}
+			ldsuc1.ShowFileContent();			
+			//high_function();					
+			return;
+		}
+	} // End of add_buttonF()
+	public void delete_buttonF() {
+		label.setText("");
+		LdifSearch();
+		if (sb == null) {
+			label.setText("First do search operation on the version.");
+			return;
+		}
+		int j = sb.indexOf(search_builder);
+		if (j == -1) {
+			// JOptionPane.showMessageDialog(null, "Select correct product for this LDIF
+			// file");
+			label.setText("File does not match with selected product.");
+			rg_sb = "";
+			sb = null;
+			return;
+
+		}
+
+		rg_prod_version = textField_2.getText();
+		if (textField_2.getText().length() != 0 && textField_2.getText().length() >= 6) {
+			k = sb.indexOf("n=\"" + rg_prod_version);// check later the boundary. Should not return -1
+
+		} else {
+			label.setText("Version field is mandatory and of fixed length(6)");
+			rg_sb = "";
+			sb = null;
+			return;
+		}
+		if (k == -1) {
+			label.setText("Version not found.");
+			rg_sb = "";
+			sb = null;
+			return;
+		}
+
+		// k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not
+		// return -1
+		// m = sb.indexOf("/>",k); //check later the boundary. Should not return -1
+		if (k != -1) {
+			update_start = sb.lastIndexOf("<", k);
+			// System.out.println(sb.substring(update_start,update_start+1));
+			update_end = sb.indexOf(">", k);
+			// Add code to check the start and end int for -1 if the version to be modified
+			// is not found
+			sb.delete(update_start, update_end + 1);
+
+			try {
+				// FileWriter rg_fw_mod = new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile,
+				// false);
+				// BufferedWriter rg_bw_mod = new BufferedWriter(rg_fw_mod.sb.toString());
+				PrintWriter rg_pr_mod = new PrintWriter(
+						new BufferedWriter(new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile)));
+				rg_pr_mod.write(sb.toString());
+				rg_pr_mod.close();
+				k = 0;
+				update_start = 0;
+				update_end = 0;
+				rg_sb = "";
+				label.setText("Record Deleted");
+				all_vers1.removeElement(rg_prod_version);
+				ldsuc1.ShowFileContent();
+
+				sb = null;
+
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
+					label.setText("File I/O exception");
+				else
+					label.setText("File I/O exception");
+
+			} catch (NullPointerException npe) {
+				if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
+					label.setText("Select the file");
+				else
+					label.setText("File not found or file not selected");
+			}
+
+		} else
+			label.setText("Record not found");
+	} // End of delete_buttonF()
+	public void modify_buttonF() {
+		/// use file writer to modify the file
+		// rg_sb = sb.toString();
+		if (sb == null) {
+			label.setText("First do search operation on the version.");
+			return;
+		}
+		label.setText("");
+		int j = sb.indexOf(search_builder);
+		if (j == -1) {
+			// JOptionPane.showMessageDialog(null, "Select correct product for this LDIF
+			// file");
+			label.setText("File does not match with selected product.");
+			rg_sb = "";
+			sb = null;
+			return;
+
+		}
+		label.setText("");
+		rg_prod_version = textField_2.getText();
+		if (textField_2.getText().length() != 0 && textField_2.getText().length() >= 6) {
+			k = sb.indexOf("n=\"" + rg_prod_version);// check later the boundary. Should not return -1
+
+		} else {
+			label.setText("Version field is mandatory and of fixed length(6)");
+			rg_sb = "";
+			sb = null;
+			return;
+		}
+		if (k == -1) {
+			label.setText("Version not found.");
+			rg_sb = "";
+			sb = null;
+			return;
+		}
+
+		// k = sb.indexOf("n=\""+rg_prod_version);//check later the boundary. Should not
+		// return -1
+		// m = sb.indexOf("/>",k); //check later the boundary. Should not return -1
+		if (k != -1) {
+			update_start = sb.lastIndexOf("<", k);
+			// System.out.println(sb.substring(update_start,update_start+1));
+			update_end = sb.indexOf(">", k);
+			int int_mand = 2;
+			String str_softsec = "";
+			if (comboBox_1.getSelectedIndex() == 0) {
+				str_softsec = "software";
+			} else {
+				str_softsec = "security";
+			}
+			if (rdbtnNewRadioButton.isSelected()) {
+				int_mand = 1;
+			} else if (rdbtnNo.isSelected()) {
+				int_mand = 0;
+			}
+
+			// check all elements are present
+			// version check
+			if ((textField_2.getText().length() == 0 || textField_2.getText().length() < 6)
+					|| (textField.getText().length() == 0 || textField.getText().length() < 8)
+					|| (textField_1.getText().length() == 0 || textField_1.getText().length() < 8)
+					|| (textArea.getText().length() == 0) // || int_mand == 2
+			) {
+				label.setText("Fill all parameter.VersionLength=6, DateLength=8.");
+				rg_sb = "";
+				sb = null;
+				return;
+			}
+			String tobe_updated = "<Update t=\"" + textField.getText() + "\" f=\"" + textField_1.getText()
+					+ "\" d=\"" + textArea.getText() + "\" m=\"" + int_mand + "\" n=\"" + textField_2.getText()
+					+ "\" k=\"" + str_softsec + "\"/";
+			// Add code to check the start and end int for -1 if the version to be modified
+			// is not found and correct file to update
+			sb.replace(update_start, update_end, tobe_updated);
+			// System.out.println(textArea.getText());
+			// System.out.println(sb.toString());
+			// System.out.println(tobe_updated);
+			try {
+				// FileWriter rg_fw_mod = new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile,
+				// false);
+				// BufferedWriter rg_bw_mod = new BufferedWriter(rg_fw_mod.sb.toString());
+				PrintWriter rg_pr_mod = new PrintWriter(
+						new BufferedWriter(new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile)));
+				rg_pr_mod.write(sb.toString());
+				rg_pr_mod.close();
+				k = 0;
+				update_start = 0;
+				update_end = 0;
+				rg_sb = "";
+				sb = null;
+				int_mand = 2;
+				label.setText("Record Modified");
+
+				ldsuc1.ShowFileContent();
+				high_function();
+
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
+					label.setText("File I/O exception");
+				else
+					label.setText("File I/O exception");
+
+			} catch (NullPointerException npe) {
+				if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
+					label.setText("Select the file");
+				else
+					label.setText("File not found or file not selected");
+			}
+
+		} else
+			label.setText("Record not found");
+	} // End of modify_buttonF()
+
+} // End of Class

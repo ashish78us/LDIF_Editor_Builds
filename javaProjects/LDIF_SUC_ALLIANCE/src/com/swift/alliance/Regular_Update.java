@@ -128,6 +128,7 @@ public class Regular_Update extends JFrame {
 				LdifSearch((String) all_vers1.getSelectedItem());
 				high_function((String) all_vers1.getSelectedItem(), "mouseClicked");
 				rg_sb = "";
+				curr_index = all_vers1.getIndexOf(all_vers1.getSelectedItem());
 			}
 		});
 		comboBox_2.addItemListener(new ItemListener() {
@@ -135,6 +136,8 @@ public class Regular_Update extends JFrame {
 				LdifSearch((String) all_vers1.getSelectedItem());
 				high_function((String) all_vers1.getSelectedItem(), "itemStateChanged");
 				rg_sb = "";
+				curr_index = all_vers1.getIndexOf(all_vers1.getSelectedItem());
+				
 			}
 		});		
 //JLabel for version
@@ -508,6 +511,8 @@ public class Regular_Update extends JFrame {
 		try {
 			HighlightPainter color_high = new DefaultHighlighter.DefaultHighlightPainter(Color.GREEN);
 			HighlightPainter red = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
+			
+			if (textField.getText() != "") {
 
 			if (Integer.parseInt(textField.getText()) < Integer.parseInt(Date_reg)) {
 				high.addHighlight(b_to_update-1+all_vers1.getIndexOf(prod_version_high)+11, d_sof_sec_stop+2+all_vers1.getIndexOf(prod_version_high)+7, red);
@@ -515,6 +520,7 @@ public class Regular_Update extends JFrame {
 
 			} else {
 				high.addHighlight(b_to_update-1+all_vers1.getIndexOf(prod_version_high)+11, d_sof_sec_stop+2+all_vers1.getIndexOf(prod_version_high)+7, color_high);
+			}
 			}
 		} catch (BadLocationException e3) {
 			// TODO Auto-generated catch block
@@ -577,6 +583,7 @@ public class Regular_Update extends JFrame {
 		high_function(textField_2.getText(), "searchButton");
 		rg_sb = "";
 		sb = null;
+		curr_index = all_vers1.getIndexOf(textField_2.getText());
 	} // End of searchButtonF()
 	public void previous_buttonF() {
 		ldsuc1.lblNewLabel.setText("");
@@ -643,6 +650,9 @@ public class Regular_Update extends JFrame {
 		label.setText("");
 		curr_index = curr_index - 1;
 		high_function(rg_prod_version, "previous");
+		rg_sb = "";
+		sb=null;
+		comboBox_2.setSelectedIndex(curr_index);
 	} // End of previous_buttonF()
 	public void next_buttonF() {
 		ldsuc1.lblNewLabel.setText("");
@@ -724,6 +734,11 @@ public class Regular_Update extends JFrame {
 
 		curr_index = curr_index + 1;
 		high_function(rg_prod_version, "next");
+		rg_sb = "";
+		sb = null;
+		comboBox_2.setSelectedIndex(curr_index);
+		
+		//all_vers1.getIndexOf(all_vers1.getSelectedItem()
 	} // End of next_buttonF()
 	public void add_buttonF() {
 		label.setText("");
@@ -1046,21 +1061,39 @@ public class Regular_Update extends JFrame {
 				update_start = 0;
 				update_end = 0;
 				rg_sb = "";
-				sb = null;
+				sb = null;			
 				
 				all_vers1.removeElement(rg_prod_version);
-				ldsuc1.ShowFileContent();
-				LdifSearch(all_vers1.getSelectedItem().toString());
-				rg_sb = "";
-				sb = null;
-				high_function(all_vers1.getSelectedItem().toString(), "delete");
-				rg_sb = "";
-				sb = null;
-				curr_index = curr_index -1;
+//
+				
+				LDIF4SoftwareUpdateCheck.obj_ru.dispose();
+				ldsuc1.reg_upd_fn();
+			    ldsuc1.obj_ru.textField_2.setText(all_vers1.getSelectedItem().toString());
+			    LdifSearch(all_vers1.getSelectedItem().toString());   // to retain all the values in the GUI	// keeps sb value		    
+			    k=0;
+				update_start=0;
+				update_end=0;
+			    rg_sb = "";
+			    sb = null;
+			    high_function(all_vers1.getSelectedItem().toString(),"delete"); // keeps ab value
+			    rg_sb = "";
+			    sb = null;
+			    ldsuc1.ShowFileContent();
+				//
+				
+				
+				
+				/*
+				 * ldsuc1.ShowFileContent(); LdifSearch(all_vers1.getSelectedItem().toString());
+				 * rg_sb = ""; sb = null; high_function(all_vers1.getSelectedItem().toString(),
+				 * "delete"); rg_sb = ""; sb = null;
+				 */
+				//curr_index = curr_index -1;
 				//System.out.println(all_vers1.getSelectedItem().toString());
 				
 				
 				ldsuc1.lblNewLabel.setText("Record Deleted");
+				comboBox_2.setSelectedIndex(curr_index-1);
 
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -1234,3 +1267,4 @@ public class Regular_Update extends JFrame {
 //FileWriter rg_fw_mod = new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile,
 // false);
 // BufferedWriter rg_bw_mod = new BufferedWriter(rg_fw_mod.sb.toString());
+//sfsfdj

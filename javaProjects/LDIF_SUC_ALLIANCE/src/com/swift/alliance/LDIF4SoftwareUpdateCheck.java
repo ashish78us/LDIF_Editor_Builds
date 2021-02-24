@@ -119,13 +119,12 @@ public class LDIF4SoftwareUpdateCheck {
 					return;
 				}
 				next=first;
-				while (next < end_bb) {					
-					k=sb.indexOf("n=\"",next+9);
-					arr_count++;
-					next=k;		
-					//System.out.println("next now=" + next);
-					
-				}				
+				
+				  while (next < end_bb) { k=sb.indexOf("n=\"",next+9); arr_count++; next=k;
+				  //System.out.println("next now=" + next);
+				  
+				  }
+				 			
 				//String[] version_arr1 = new String[arr_count+1];
 				ds=new DefaultComboBoxModel<String>();
 				arr_count=2;

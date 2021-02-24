@@ -19,9 +19,6 @@
 		<javac includeantruntime="false" srcdir="${src}" destdir="${build}" />
 	
 	</target>
-
-
-
-
-
 </project>
+
+

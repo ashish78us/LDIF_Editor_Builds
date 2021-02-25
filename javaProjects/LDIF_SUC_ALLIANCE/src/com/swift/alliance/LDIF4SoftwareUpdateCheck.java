@@ -48,6 +48,7 @@ public class LDIF4SoftwareUpdateCheck {
 	static DefaultComboBoxModel<String> ds;
 	static Regular_Update obj_ru;
 	static Yearly_Update obj_yu;
+	static int ldsuc_curr_index = 0;
 	
 
 	/**
@@ -226,7 +227,7 @@ public class LDIF4SoftwareUpdateCheck {
 					//System.out.println("next now=" + next);
 					
 				}	
-				obj_ru = new Regular_Update(ds,textArea, window1);
+				obj_ru = new Regular_Update(ds,textArea, window1, ldsuc_curr_index);
 				obj_ru.setVisible(true);
 				
 			}

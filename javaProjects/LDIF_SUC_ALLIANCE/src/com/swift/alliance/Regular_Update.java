@@ -69,7 +69,7 @@ public class Regular_Update extends JFrame {
 	private static String soft_sec = "software";
 	private static int curr_index = 0;
 	private static String SelVerN;
-	private DefaultComboBoxModel<String> all_vers1;
+	private static DefaultComboBoxModel<String> all_vers1;
 	private static Highlighter high;
 	private static String Date_reg;
 	private static LDIF4SoftwareUpdateCheck ldsuc1;
@@ -410,11 +410,11 @@ public class Regular_Update extends JFrame {
 
 	public void LdifSearch(String Version) {
 //Version is input to this function by the callee
+		if (Version == "") {label.setText("Version field cannot be empty");return; }		
 		label.setText("");
 		textField_2.setBackground(Color.white);
 		textField_2.setText(Version);
-		//System.out.println("VersionInsideSearch="+ Version);		
-		
+		//System.out.println("VersionInsideSearch="+ Version);			
 //Get file latest content		
 		sb = OpenFileAsStringB();
 //Check if file was empty		
@@ -708,46 +708,47 @@ public class Regular_Update extends JFrame {
 		//all_vers1.getIndexOf(all_vers1.getSelectedItem()
 	} // End of next_buttonF()
 	public void add_buttonF() {
+//Reset common variables
 		label.setText("");
 		rg_sb = "";
 		sb = null;
 		String Product_version_add = textField_2.getText();
 		String Product_version = "";
-		// System.out.println(textField_2.getText());
-		
+//Get file latest content		
 		sb = OpenFileAsStringB();
-
-		int j = sb.indexOf(search_builder);
-		// System.out.println(j);
-		if (j == -1) {
-			// JOptionPane.showMessageDialog(null, "Select correct product for this LDIF
-			// file");
-			label.setText("File does not match with selected product.");
-			rg_sb = "";
-			sb = null;
-			return;
-		}
-
-		k = sb.indexOf("n=\"" + Product_version_add);// check later the boundary. Should not return -1
-		// m = sb.indexOf("/>",k); //check later the boundary. Should not return -1
+//Check if file was empty		
+		  if (sb == null) 
+		  { 
+		  label.setText("Error Encountered in reading file.");
+		  return; 
+		  }
+//Product File vs Selected product match, version parameters check
+		  if (ProductFileMatch(sb) !=0) {return;}
+		 // if (check_param_version(sb) != 0) {return;}
+// Check if version already exist or not
+		k = sb.indexOf("n=\"" + Product_version_add);
 		if (k != -1) {
 			JOptionPane.showMessageDialog(null, "Version already exist.");
 			// Working area
-			ldsuc1.obj_ru.textField_2.setText(Product_version_add);
-			
-			LdifSearch(Product_version_add);   // to retain all the values in the GUI
-			high_function(Product_version_add, "add_v_exist");
+			LDIF4SoftwareUpdateCheck.obj_ru.textField_2.setText(Product_version_add);	
+			LDIF4SoftwareUpdateCheck.obj_ru.comboBox_2.setSelectedIndex(all_vers1.getIndexOf(Product_version_add));
+			curr_index = all_vers1.getIndexOf(Product_version_add);
+			LDIF4SoftwareUpdateCheck.obj_ru.LdifSearch(Product_version_add);   // to retain all the values in the GUI
+			rg_sb = "";
+			sb = null;
+			LDIF4SoftwareUpdateCheck.obj_ru.high_function(Product_version_add, "add_v_exist");
 			rg_sb = "";
 			sb = null;
 			return;
-			// k = sb.indexOf("</Updates>");
-		} else  {   //k=-1 i.e. record not found and can be added.
-
-			//System.out.println(all_vers1.getSize());
-			//for (int r=0;r<=all_vers1.getSize();r++) {
+			
+		} 
+// Core of Add function	-  adding record	
+		//value of k=-1 i.e. record not found and can be added now.
+		else  {  
 			int row_num_where_tobAdded = 0;
 			int start_new_record_high = 0;
 			int last_highlight = 0;
+		//Looping through all the records to find the place where this record can be added
 			for (int r=0;r<all_vers1.getSize();r++) {
 				String version_to_compare ="";
 				String version_to_add = "";
@@ -762,211 +763,81 @@ public class Regular_Update extends JFrame {
 				version_to_add = version_to_add.concat(Product_version_add.substring(5,6));
 				//System.out.println(version_to_add);
 				
-				
+			// IF condition if the version (at index 'r') that exist is greater than then version to be added
 				if (Integer.parseInt(version_to_compare) > Integer.parseInt(version_to_add)   )
-				{// version will be added in between
+				{
+				// This is the index where new record needs to be added.
 					row_num_where_tobAdded = r;
-					//System.out.println("Row=" +r);
-					//System.out.println(all_vers1.getElementAt(r-1));
+				//Getting the product version one before
 					Product_version = all_vers1.getElementAt(r-1);
-					k = sb.indexOf("n=\""+Product_version);
-					k = sb.indexOf("/>",k);//from where the addition will take place
-					
-					int int_mand = 2;
-					String str_softsec = "";
-					if (comboBox_1.getSelectedIndex() == 0)
-					{
-						str_softsec = "software";
-					}
-					else
-					{
-						str_softsec = "security";
-					}
-					if (rdbtnNewRadioButton.isSelected())
-					{
-						int_mand = 1;
-					}
-					else if (rdbtnNo.isSelected())
-					{
-						int_mand = 0;
-					}	
-					
-					if
-					(
-							(textField_2.getText().length() ==0 || textField_2.getText().length() < 6) 
-							|| (textField.getText().length() ==0 || textField.getText().length() <8)
-							|| (textField_1.getText().length() ==0 || textField_1.getText().length() <8) 
-							|| (textArea.getText().length() ==0) || (int_mand == 2) //|| int_mand == 2
-						)
-					{
-						label.setText("Fill all parameter.VersionLength=6, DateLength=8.");
-						rg_sb = "";
-						sb = null;
-						return;
-					}
-					
-					String tobe_added = "<Update t=\""+ textField.getText() +"\" f=\"" + textField_1.getText() + "\" d=\"" + textArea.getText() + "\" m=\"" +  int_mand + "\" n=\"" + textField_2.getText() + "\" k=\"" + str_softsec + "\"/>" ;                  
-					sb.insert(update_start+k+2, tobe_added);
-					
-					try {
-						//FileWriter rg_fw_mod = new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile, false);
-						//BufferedWriter rg_bw_mod = new BufferedWriter(rg_fw_mod.sb.toString());
-						PrintWriter rg_pr_mod = new PrintWriter(new BufferedWriter(new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile)))	;
-						rg_pr_mod.write(sb.toString());
-						rg_pr_mod.close();
-						
-						int_mand = 2;
-						//ldsuc1.lblNewLabel.setText("Record Added");
-						curr_index = r +1;
-						//comboBox_2.setSelectedItem(textField_2.getText());
-						//comboBox_2.setSelectedIndex(r-1);
-						
-						
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-							label.setText("File I/O exception");
-							else
-								label.setText("File I/O exception");
-						
-					}catch (NullPointerException npe) {
-						if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-							label.setText("Select the file");
-							else
-								label.setText("File not found or file not selected");
-					}
-					
-					all_vers1.addElement(textField_2.getText());
-					ldsuc1.ShowFileContent();    // to refresh File text after addition
-					ldsuc1.lblNewLabel.setText("Record Added");
-					rg_sb = "";
-					sb = null;
-					
-					LDIF4SoftwareUpdateCheck.obj_ru.dispose();
-					ldsuc1.reg_upd_fn();
-				    ldsuc1.obj_ru.textField_2.setText(Product_version_add);
-				    LdifSearch(Product_version_add);   // to retain all the values in the GUI	// keeps sb value		    
-				    k=0;
-					update_start=0;
-					update_end=0;
-				    rg_sb = "";
-				    sb = null;
-				    high_function(Product_version_add,"add"); // keeps ab value
-				    rg_sb = "";
-				    sb = null;
+					addVersion4AddF(sb,Product_version, Product_version_add, r);
 					return;
 				}
-				else if (r>=(all_vers1.getSize()-1)) {  // version will be added at the end
-					//System.out.println("inside else loop");
+			// version will be added at the end
+				else if (r>=(all_vers1.getSize()-1)) {  
 					Product_version = all_vers1.getElementAt(all_vers1.getSize()-1);
-					//System.out.println("Product_Version=" + Product_version);
+					//addVersion4AddF(sb,Product_version, Product_version_add, r);					
 					k = sb.indexOf("n=\""+Product_version);
+				//from where the addition will take place
 					k = sb.indexOf("/>",k);//from where the addition will take place
 					
+				//Resetting some variables	
 					int int_mand = 2;
 					String str_softsec = "";
+			   //Fetching the value of new record 
 					if (comboBox_1.getSelectedIndex() == 0)
-					{
-						str_softsec = "software";
-					}
+					{str_softsec = "software";}
 					else
-					{
-						str_softsec = "security";
-					}
+					{str_softsec = "security";}
 					if (rdbtnNewRadioButton.isSelected())
-					{
-						int_mand = 1;
-					}
+					{int_mand = 1;}
 					else if (rdbtnNo.isSelected())
-					{
-						int_mand = 0;
-					}
-					
-					
-					//if (textField_2.getText().length() ==0 || textField_2.getText().length() <= 6 || textField.getText().length() ==0 || textField.getText().length() <=6 || textField_1.getText().length() ==0 || textField_1.getText().length() <=6 || textArea.getText().length() ==0 || int_mand == 2 )
-					
-					if
-					(
-							(textField_2.getText().length() ==0 || textField_2.getText().length() < 6) 
-							|| (textField.getText().length() ==0 || textField.getText().length() <8)
-							|| (textField_1.getText().length() ==0 || textField_1.getText().length() <8) 
-							|| (textArea.getText().length() ==0) || (int_mand == 2) //|| int_mand == 2
-						)
-					{
-						label.setText("Fill all parameter.VersionLength=6, DateLength=8.");
-						rg_sb = "";
-						sb = null;
-						k=0;
-						return;
-					}
-					
-					String tobe_added = "<Update t=\""+ textField.getText() +"\" f=\"" + textField_1.getText() + "\" d=\"" + textArea.getText() + "\" m=\"" +  int_mand + "\" n=\"" + textField_2.getText() + "\" k=\"" + str_softsec + "\"/>" ;                  
-					
+					{int_mand = 0;}	
+				//Checking all parameters
+					if (all_param_check() != 0) {return;}
+				//Writing record to the file	
+					String tobe_added = "<Update t=\""+ textField.getText() +"\" f=\"" + 
+							textField_1.getText() + "\" d=\"" + textArea.getText() + "\" m=\"" + 
+							int_mand + "\" n=\"" + textField_2.getText() + "\" k=\"" + str_softsec + "\"/>" ;                  
+					//sb.insert(update_start+k+2, tobe_added);	
 					sb.insert(k+2, tobe_added);
-					curr_index = r +1;
-					k = sb.indexOf("n=\""+Product_version_add);
-					start_new_record_high = sb.lastIndexOf("<",k);
-					//System.out.println("start_new_record_high=" + start_new_record_high);
-					last_highlight = sb.indexOf("/>",k);
-					//System.out.println("lastHigjloght="+ last_highlight);
-					
-					try {
-						//FileWriter rg_fw_mod = new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile, false);
-						//BufferedWriter rg_bw_mod = new BufferedWriter(rg_fw_mod.sb.toString());
-						PrintWriter rg_pr_mod = new PrintWriter(new BufferedWriter(new FileWriter(LDIF4SoftwareUpdateCheck.SelectedFile)))	;
-						rg_pr_mod.write(sb.toString());
-						rg_pr_mod.close();
-						//k=0;
-						//p=0;
-						
-						
-						int_mand = 2;
-						
-						//comboBox_2.setSelectedItem(textField_2.getText());
-						//comboBox_2.setSelectedIndex(r);
-						
-						curr_index = r +1;					
-						
-						
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-							label.setText("File I/O exception");
-							else
-								label.setText("File I/O exception");
-						
-					}catch (NullPointerException npe) {
-						if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-							label.setText("Select the file");
-							else
-								label.setText("File not found or file not selected");
-					}					
-					all_vers1.addElement(textField_2.getText());
-					ldsuc1.ShowFileContent();    // to refresh File text after addition
-					ldsuc1.lblNewLabel.setText("Record Added");
+					file_write_fromSB(sb);
+				//Resetting variables	
+					int_mand = 2;					
 					rg_sb = "";
-					sb = null;
-					LDIF4SoftwareUpdateCheck.obj_ru.dispose();
-					ldsuc1.reg_upd_fn();
-				    ldsuc1.obj_ru.textField_2.setText(Product_version_add);
-				    LdifSearch(Product_version_add);   // to retain all the values in the GUI	// keeps sb value		    
-				    k=0;
+					sb = null;	
+				//Adding element from version drop down comboBox_2
+					all_vers1.insertElementAt(textField_2.getText(),r+1);
+				// Refresh file content
+				    ldsuc1.ShowFileContent();
+				//Setting curr_index for next version to highlight which will be same as the one deleted.
+					curr_index = r +1; 
+					LDIF4SoftwareUpdateCheck.ldsuc_curr_index = r + 1;				
+				//set both version comboBox_2 and version filled same value for newly added version	
+					LDIF4SoftwareUpdateCheck.obj_ru.textField_2.setText(all_vers1.getSelectedItem().toString());
+					LDIF4SoftwareUpdateCheck.obj_ru.comboBox_2.setSelectedIndex(LDIF4SoftwareUpdateCheck.ldsuc_curr_index);					
+				//Call search method on the version at same index as added
+					LDIF4SoftwareUpdateCheck.obj_ru.LdifSearch(LDIF4SoftwareUpdateCheck.ds.getElementAt(LDIF4SoftwareUpdateCheck.ldsuc_curr_index));   // to get all the values in the GUI	// keeps sb value		    
+					//LDIF4SoftwareUpdateCheck.obj_ru.curr_index = LDIF4SoftwareUpdateCheck.ldsuc_curr_index;
+					k=0;
 					update_start=0;
 					update_end=0;
 				    rg_sb = "";
 				    sb = null;
-				    high_function(Product_version_add,"add"); // keeps ab value
+				//Highlight the selected version
+				    LDIF4SoftwareUpdateCheck.obj_ru.high_function(LDIF4SoftwareUpdateCheck.ds.getElementAt(curr_index),"add"); // keeps ab value
 				    rg_sb = "";
 				    sb = null;
-					return;					
-				}				
+				// Feedback of the operation
+				    LDIF4SoftwareUpdateCheck.obj_ru.label.setText(textField_2.getText() + " added in file.");	
+					return;	
+					}				
 			}
-			//ldsuc1.ShowFileContent();			
-			//high_function();					
 			return;
 		}
 	} // End of add_buttonF()
 	public void delete_buttonF() {
+	//Reset common variables
 		label.setText("");
 		LDIF4SoftwareUpdateCheck.lblNewLabel.setText("");
 		rg_sb = "";
@@ -1001,50 +872,49 @@ public class Regular_Update extends JFrame {
 			rg_sb = "";
 			sb = null;
 		//Removing element from version drop down comboBox_2
-			LDIF4SoftwareUpdateCheck.ds.removeElementAt(LDIF4SoftwareUpdateCheck.ldsuc_curr_index);
+			all_vers1.removeElementAt(LDIF4SoftwareUpdateCheck.ldsuc_curr_index);
+		//Refresh the content of the file
+		    ldsuc1.ShowFileContent();
 		//Setting curr_index for next version to highlight which will be same as the one deleted.
 			curr_index = LDIF4SoftwareUpdateCheck.ldsuc_curr_index; // value saved earlier
 		//Dispose current regular object to refresh the value of version drop down comboBox_2
-			LDIF4SoftwareUpdateCheck.obj_ru.dispose();
-			ldsuc1.reg_upd_fn();
+			//LDIF4SoftwareUpdateCheck.obj_ru.dispose();
+			//ldsuc1.reg_upd_fn();
 		// Setting when record deleted other than last one	
 		    if (LDIF4SoftwareUpdateCheck.ldsuc_curr_index < LDIF4SoftwareUpdateCheck.ds.getSize())
 		    {
 		//set both version comboBox_2 and version filled same value for next version
-			LDIF4SoftwareUpdateCheck.obj_ru.textField_2.setText(LDIF4SoftwareUpdateCheck.ds.getSelectedItem().toString());
+			LDIF4SoftwareUpdateCheck.obj_ru.textField_2.setText(all_vers1.getSelectedItem().toString());
 			LDIF4SoftwareUpdateCheck.obj_ru.comboBox_2.setSelectedIndex(LDIF4SoftwareUpdateCheck.ldsuc_curr_index);
 		//Call search method on the version at same index as deleted before (next version after deletion)
 			LDIF4SoftwareUpdateCheck.obj_ru.LdifSearch(LDIF4SoftwareUpdateCheck.ds.getElementAt(LDIF4SoftwareUpdateCheck.ldsuc_curr_index));   // to get all the values in the GUI	// keeps sb value		    
-		    k=0;
+		//Resetting variables
+			k=0;
 			update_start=0;
 			update_end=0;
 		    rg_sb = "";
-		    sb = null;
-		//Refresh the content of the file
-		    ldsuc1.ShowFileContent();		   
+		    sb = null;				   
 		//Highlight the selected version
 		    high_function(LDIF4SoftwareUpdateCheck.obj_ru.all_vers1.getElementAt(LDIF4SoftwareUpdateCheck.ldsuc_curr_index),"delete"); // keeps ab value
 		    rg_sb = "";
 		    sb = null;		
 		    }
-		 //  Settings in else part for last record that was deleted.
+		 //Settings in else part for last record that was deleted.
 		    else if (LDIF4SoftwareUpdateCheck.ldsuc_curr_index == LDIF4SoftwareUpdateCheck.ds.getSize()) { 
-		    //After last record deleted counter is set to first record
+		 //After last record deleted counter is set to first record
 		    	curr_index = 0;
-		    //set both version comboBox_2 and version filled same value for first version
-				LDIF4SoftwareUpdateCheck.obj_ru.textField_2.setText(LDIF4SoftwareUpdateCheck.ds.getElementAt(0));
+		 //set both version comboBox_2 and version filled same value for first version
+				LDIF4SoftwareUpdateCheck.obj_ru.textField_2.setText(all_vers1.getElementAt(0));
 				LDIF4SoftwareUpdateCheck.obj_ru.comboBox_2.setSelectedIndex(0);
-			//Call search method on the version at same index as deleted before (next version after deletion)
+		 //Call search method on the version at same index as deleted before (next version after deletion)
 				LDIF4SoftwareUpdateCheck.obj_ru.LdifSearch(LDIF4SoftwareUpdateCheck.ds.getElementAt(0));   // to get all the values in the GUI	// keeps sb value		    
 			    k=0;
 				update_start=0;
 				update_end=0;
 			    rg_sb = "";
 			    sb = null;
-			//Refresh the content of the file
-			    ldsuc1.ShowFileContent();		   
-			//Highlight the selected version
-			    high_function(LDIF4SoftwareUpdateCheck.obj_ru.all_vers1.getElementAt(0),"delete"); // keeps ab value
+		//Highlight the selected version
+			    high_function(all_vers1.getElementAt(0),"delete"); // keeps ab value
 			    rg_sb = "";
 			    sb = null;			    
 		    }
@@ -1053,7 +923,7 @@ public class Regular_Update extends JFrame {
 			label.setText("No operation done");
 	} // End of delete_buttonF()
 	public void modify_buttonF() {
-		
+//Reset common variables		
 		label.setText("");
 		rg_sb = "";
 		sb = null;
@@ -1187,42 +1057,6 @@ public class Regular_Update extends JFrame {
 		}
 		return 0;
 	} // End of check_param(StringBuilder sb)
-//Refreshing the GUI after delete and add operation
-	public void RefreshGUI() {
-		//resetting the values of variable			
-		k = 0;
-		update_start = 0;
-		update_end = 0;
-		rg_sb = "";
-		sb = null;
-	//Removing element from version drop down comboBox_2
-		LDIF4SoftwareUpdateCheck.ds.removeElementAt(LDIF4SoftwareUpdateCheck.ldsuc_curr_index);
-	
-	// add if condition to check if the last version was deleted. If yes the set the current index and version to first
-		
-	
-	//Setting curr_index for next version to highlight which will be same as the one deleted.
-		curr_index = LDIF4SoftwareUpdateCheck.ldsuc_curr_index; // value saved earlier
-	//Dispose current regular object to refresh the value of version drop down conboBox_2
-		LDIF4SoftwareUpdateCheck.obj_ru.dispose();
-		ldsuc1.reg_upd_fn();
-	//set both version comboBox_2 and version filed same value
-		LDIF4SoftwareUpdateCheck.obj_ru.textField_2.setText(all_vers1.getSelectedItem().toString());
-		LDIF4SoftwareUpdateCheck.obj_ru.comboBox_2.setSelectedIndex(LDIF4SoftwareUpdateCheck.ldsuc_curr_index);
-	//Call search method on the version at same index as deleted before (next version after deletion)
-	    LdifSearch(LDIF4SoftwareUpdateCheck.obj_ru.all_vers1.getSelectedItem().toString());   // to get all the values in the GUI	// keeps sb value		    
-	    k=0;
-		update_start=0;
-		update_end=0;
-	    rg_sb = "";
-	    sb = null;
-	//Refresh the content of the file
-	    ldsuc1.ShowFileContent();		   
-	//Highlight the selected version
-	    high_function(LDIF4SoftwareUpdateCheck.obj_ru.all_vers1.getElementAt(LDIF4SoftwareUpdateCheck.ldsuc_curr_index),"delete"); // keeps ab value
-	    rg_sb = "";
-	    sb = null;
-	} // End of RefreshGUI()
 //Product file and Selected product match
 	public int ProductFileMatch(StringBuilder sb) {
 		int j = sb.indexOf(search_builder);		
@@ -1249,6 +1083,59 @@ public class Regular_Update extends JFrame {
 		}
 		return 0;
 	}
+	public void addVersion4AddF(StringBuilder sb,String Product_version, String Product_version_add, int r) {
+		k = sb.indexOf("n=\""+Product_version);
+		//Point from where the addition will take place
+			k = sb.indexOf("/>",k);
+		//Resetting some variables	
+			int int_mand = 2;
+			String str_softsec = "";
+	   //Fetching the value of new record 
+			if (comboBox_1.getSelectedIndex() == 0)
+			{str_softsec = "software";}
+			else
+			{str_softsec = "security";}
+			if (rdbtnNewRadioButton.isSelected())
+			{int_mand = 1;}
+			else if (rdbtnNo.isSelected())
+			{int_mand = 0;}	
+		//Checking all parameters
+			if (all_param_check() != 0) {return;}
+		//Writing record to the file	
+			String tobe_added = "<Update t=\""+ textField.getText() +"\" f=\"" + 
+					textField_1.getText() + "\" d=\"" + textArea.getText() + "\" m=\"" + 
+					int_mand + "\" n=\"" + textField_2.getText() + "\" k=\"" + str_softsec + "\"/>" ;                  
+			//sb.insert(update_start+k+2, tobe_added);	
+			sb.insert(k+2, tobe_added);
+			file_write_fromSB(sb);
+		//Resetting variables	
+			int_mand = 2;					
+			rg_sb = "";
+			sb = null;					
+		//Adding element from version drop down comboBox_2			
+			all_vers1.insertElementAt(textField_2.getText(),r);
+		// Refresh file content
+		    ldsuc1.ShowFileContent();
+		//Setting curr_index for next version to highlight which will be same as the one deleted.
+			curr_index = r ; 
+			LDIF4SoftwareUpdateCheck.ldsuc_curr_index = r ;					
+		//set both version comboBox_2 and version filled same value for next version
+			LDIF4SoftwareUpdateCheck.obj_ru.textField_2.setText(all_vers1.getSelectedItem().toString());
+			LDIF4SoftwareUpdateCheck.obj_ru.comboBox_2.setSelectedIndex(LDIF4SoftwareUpdateCheck.ldsuc_curr_index);
+		//Call search method on the version at same index as deleted before (next version after deletion)
+			LDIF4SoftwareUpdateCheck.obj_ru.LdifSearch(LDIF4SoftwareUpdateCheck.ds.getElementAt(LDIF4SoftwareUpdateCheck.ldsuc_curr_index));   // to get all the values in the GUI	// keeps sb value		    
+		//Reset Variables	
+			k=0;
+			update_start=0;
+			update_end=0;
+		    rg_sb = "";
+		    sb = null;
+		//Highlight the selected version
+		    LDIF4SoftwareUpdateCheck.obj_ru.high_function(LDIF4SoftwareUpdateCheck.ds.getElementAt(curr_index),"add"); // keeps ab value
+		    rg_sb = "";
+		    sb = null;
+		    LDIF4SoftwareUpdateCheck.obj_ru.label.setText(Product_version_add + " added in file.");		    
+	} // End of addVersion4AddF
 
 } // End of Class
 
@@ -1270,6 +1157,15 @@ System.out.println("curr_index="+curr_index + "  " + "all_vers1_selectedItem=" +
 System.out.println("in last record else if condition");
 			    System.out.println("SizeOfModel=" + LDIF4SoftwareUpdateCheck.ds.getSize());
 				System.out.println("curr_index="+curr_index+ "  " + "all_vers1_selectedItem=" + LDIF4SoftwareUpdateCheck.obj_ru.all_vers1.getElementAt(LDIF4SoftwareUpdateCheck.ldsuc_curr_index) );
+
+//LDIF4SoftwareUpdateCheck.ds.addElement(textField_2.getText());
+//Dispose current regular object to refresh the value of version drop down comboBox_2
+			//LDIF4SoftwareUpdateCheck.obj_ru.dispose();
+			//ldsuc1.reg_upd_fn();
+			 * Regular_Update.curr_index = LDIF4SoftwareUpdateCheck.ldsuc_curr_index;
+System.out.println("R=" + r + "   " + "ldsuc_curr=" + LDIF4SoftwareUpdateCheck.ldsuc_curr_index );
+
+*
 *
 */
 

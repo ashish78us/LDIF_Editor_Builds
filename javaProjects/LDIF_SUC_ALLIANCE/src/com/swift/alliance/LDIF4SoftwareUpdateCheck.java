@@ -41,8 +41,7 @@ public class LDIF4SoftwareUpdateCheck {
 	private static JTextArea textArea;
 //Public members	
 	static JTextField textField;	
-	static JLabel lblNewLabel = new JLabel("");
-	
+	static JLabel lblNewLabel = new JLabel("");	
 	static String SelectedFile;
 	static LDIF4SoftwareUpdateCheck window1;
 	static DefaultComboBoxModel<String> ds;
@@ -50,12 +49,7 @@ public class LDIF4SoftwareUpdateCheck {
 	static Yearly_Update obj_yu;
 	static int ldsuc_curr_index = 0;
 	
-
-	/**
-	 * Launch the application.
-	 */
-	
-	
+//Main Function	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -70,185 +64,85 @@ public class LDIF4SoftwareUpdateCheck {
 			}
 		});
 	}
-
-	/**
-	 * Create the application.
-	 */
-	
+//Constructor
 	public LDIF4SoftwareUpdateCheck() {
 		initialize();
-	}
-	
+	}// Enof of constructor
 	public void ShowFileContent() {
 		StringBuilder sb;
-		int first,next,arr_count=1,end_bb,k;
-		
+		int first,next,arr_count=1,end_bb,k;		
 		try {
 			if (fd != null)
-			{
-				
+			{				
 				FileReader fr = new FileReader(fd.getDirectory()+fd.getFile());
 				BufferedReader br = new BufferedReader(fr);
 				String buf = "";
 				int i;
 				lblNewLabel.setText("");
 				while((i=br.read())!=-1){  
-			        if (i <= 5000) {
-					   
-					buf = buf + (char)i;
-					if ((char)i== '>') {
-						buf = buf + "\n";
-					}
-			        }
+			      //Reading character whose decimal conversion is up to 5000  
+					if (i <= 5000) {					   
+			        				buf = buf + (char)i;
+			        				if ((char)i== '>') {
+			        									buf = buf + "\n";
+			        									}// end of if
+			        				}//end of if
 			        else {
-			        	lblNewLabel.setText("Selected file is not a text file");
-			        	buf = " ";
-			        	//textArea.setText("Selected Input file is not a text file");
-			        	//System.out.println("Input file is not a text file");
-			        	break;
-			        }
-			        }  
+			        		lblNewLabel.setText("Selected file is not a text file");
+			        		buf = " ";
+			        	   	break;
+			        	}//else
+			        } // While loop 
 				textArea.setText(buf);	
 				br.close();
 				fr.close();
 				sb = new StringBuilder(buf);
+			//Finding first version to begin with
 				first=sb.indexOf("n=\"");            // check for return of -1
+				if (first == -1) {lblNewLabel.setText("Not a valid LDIF file"); return;}
+			//Find the last version
 				end_bb=sb.lastIndexOf("n=\"");
-				
-				if ((first < 0 || end_bb <0) )
-				{
-					return;
-				}
-				next=first;
-				
-				  while (next < end_bb) { k=sb.indexOf("n=\"",next+9); arr_count++; next=k;
-				  //System.out.println("next now=" + next);
-				  
-				  }
-				 			
-				//String[] version_arr1 = new String[arr_count+1];
+				if (end_bb == -1) {lblNewLabel.setText("Not a valid LDIF file"); return;}
+			//COunting number of versions in file	
+				next=first;				
+				 while (next < end_bb) { 
+					 k=sb.indexOf("n=\"",next+9); 
+					 arr_count++; 
+					 next=k;			  
+				  }				
+			//ComboBoxModel for Regular_Update class GUI
 				ds=new DefaultComboBoxModel<String>();
 				arr_count=2;
-				//version_arr1[1] = sb.substring(first+3,first+9);
+			//Adding first element in model	
 				ds.addElement(sb.substring(first+3,first+9));
+			//Setting next back to first to start the loop
 				next=first;
+			//Adding all the elements to the model
 				while (next < end_bb) {					
 					k=sb.indexOf("n=\"",next+9);
-					//version_arr1[arr_count] = sb.substring(k+3,k+9);
-					ds.addElement(sb.substring(k+3,k+9));
-					//comboBox_2.insertItemAt(sb.substring(k+3,k+9), arr_count);
-					//System.out.println(arr_count);
-					//System.out.println(version_arr[arr_count]);
+					ds.addElement(sb.substring(k+3,k+9));					
 					arr_count++;
-					next=k;		
-					//System.out.println("next now=" + next);
-					
-				}	
-				
+					next=k;					
+				}				
 			}
 			else
-			lblNewLabel.setText("File not selected");
-			
-			
+			lblNewLabel.setText("File not selected");			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			if (textField.getText() == "")
-			lblNewLabel.setText("Select the file");
-			else
-				lblNewLabel.setText("File not found or file not selected");
-			
-		}	
-	}
-	
-	
-    public void reg_upd_fn() {
-    	
+						if (textField.getText() == "")
+							lblNewLabel.setText("Select the file");
+						else
+							lblNewLabel.setText("File not found or file not selected");			
+		}//End of catch block	
+	}// end of ShowFileContent()	
+    public void reg_upd_fn() {    	
     	if (ds==null) {
 			lblNewLabel.setText("First click on show file content button.");
 			return;
 		}
-		StringBuilder sb;
-		int first,next,arr_count=1,end_bb,k;
-		String[] version_arr = new String[50];			
-		
-		try {
-			if (fd != null)
-			{
-				
-				FileReader fr = new FileReader(fd.getDirectory()+fd.getFile());
-				BufferedReader br = new BufferedReader(fr);
-				String buf = "";
-				int i;
-				lblNewLabel.setText("");
-				while((i=br.read())!=-1){  
-			        if (i <= 5000) {
-					   
-					buf = buf + (char)i;
-					if ((char)i== '>') {
-						buf = buf + "\n";
-					}
-			        }
-			        else {
-			        	lblNewLabel.setText("Selected file is not a text file");
-			        	buf = " ";
-			        	//textArea.setText("Selected Input file is not a text file");
-			        	//System.out.println("Input file is not a text file");
-			        	break;
-			        }
-			          }  
-				
-				sb = new StringBuilder(buf);
-				first=sb.indexOf("n=\"");            // check for return of -1
-				end_bb=sb.lastIndexOf("n=\"");
-				br.close();
-				fr.close();
-				
-				next=first;
-				while (next < end_bb) {					
-					k=sb.indexOf("n=\"",next+9);
-					arr_count++;
-					next=k;		
-					//System.out.println("next now=" + next);
-					
-				}				
-				String[] version_arr1 = new String[arr_count+1];
-				arr_count=2;
-				version_arr1[1] = sb.substring(first+3,first+9);
-				next=first;
-				while (next < end_bb) {					
-					k=sb.indexOf("n=\"",next+9);
-					version_arr1[arr_count] = sb.substring(k+3,k+9);
-					//comboBox_2.insertItemAt(sb.substring(k+3,k+9), arr_count);
-					//System.out.println(arr_count);
-					//System.out.println(version_arr[arr_count]);
-					arr_count++;
-					next=k;		
-					//System.out.println("next now=" + next);
-					
-				}	
-				obj_ru = new Regular_Update(ds,textArea, window1, ldsuc_curr_index);
-				obj_ru.setVisible(true);
-				
-			}
-			else
-			lblNewLabel.setText("File not selected");
-			
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			if (textField.getText() == "")
-			lblNewLabel.setText("Select the file");
-			else
-				lblNewLabel.setText("File not found or file not selected");
-			
-		}
-    	
-    	
-    }
-	
-    
+    	obj_ru = new Regular_Update(ds,textArea, window1, ldsuc_curr_index);
+		obj_ru.setVisible(true);				
+		}// end of reg_upd_fn()
     public void yea_upd_fn() {
     	obj_yu = new Yearly_Update(window1);
 		obj_yu.setVisible(true);
@@ -296,8 +190,7 @@ public class LDIF4SoftwareUpdateCheck {
 		JButton btnSelectFile = new JButton("Select");
 		btnSelectFile.setActionCommand("LDIF File");
 		btnSelectFile.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				
+			public void actionPerformed(ActionEvent ae) {				
 				if (ae.getActionCommand()== "LDIF File")
 				{
 					if (obj_ru != null) {
@@ -326,26 +219,25 @@ public class LDIF4SoftwareUpdateCheck {
 		frame.getContentPane().add(textField_1);
 // Show File Content			
 		JButton btnDisplayFileContent = new JButton("Show file content");
+		btnDisplayFileContent.setBounds(10, 64, 146, 23);
+		frame.getContentPane().add(btnDisplayFileContent);
 		btnDisplayFileContent.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent ae) {
-						
+		public void actionPerformed(ActionEvent ae) {						
 		if (ae.getActionCommand()== "Show file content")
 		{
 			ShowFileContent();		
 		}
 	}
 });
-		btnDisplayFileContent.setBounds(10, 64, 146, 23);
-		frame.getContentPane().add(btnDisplayFileContent);		
 //Regular Update		
 		JButton btnAdd = new JButton("Regular Update");
+		btnAdd.setBounds(10, 98, 146, 23);
+		frame.getContentPane().add(btnAdd);
 		btnAdd.addActionListener(new ActionListener() {	
 		public void actionPerformed(ActionEvent arg0) {	
 			reg_upd_fn();
 			}
 		});
-		btnAdd.setBounds(10, 98, 146, 23);
-		frame.getContentPane().add(btnAdd);		
 // Yearly Update		
 		JButton btnYearlyUpdate = new JButton("Yearly Update");
 		btnYearlyUpdate.addActionListener(new ActionListener() {
@@ -374,8 +266,7 @@ public class LDIF4SoftwareUpdateCheck {
 		textArea.setBorder(UIManager.getBorder("ScrollPane.border"));
 		textArea.setBackground(Color.WHITE);
 		textArea.setEditable(false);
-		textArea.setForeground(new Color(0, 0, 255));
-	
+		textArea.setForeground(new Color(0, 0, 255));	
 	}// end of initialize function
 }// class end
 
@@ -391,6 +282,18 @@ public class LDIF4SoftwareUpdateCheck {
 		//JScrollPane jsp = new JScrollPane();
 		//jsp.getViewport().add(textArea);
 		//frame.getContentPane().add(jsp);
+ 
+ if ((first < 0 || end_bb <0) )
+				{
+					lblNewLabel.setText("Not a valid LDIF file");
+					return;
+				}
+ 
+ 
+ 
+ * 
+ * 
+ * 
  * 
  * 
  */

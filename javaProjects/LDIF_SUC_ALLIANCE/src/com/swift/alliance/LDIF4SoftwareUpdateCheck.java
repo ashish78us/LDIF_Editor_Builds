@@ -147,12 +147,8 @@ public class LDIF4SoftwareUpdateCheck {
     	obj_yu = new Yearly_Update(window1);
 		obj_yu.setVisible(true);
     }
-    /**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-//GUI components
-		
+   	private void initialize() {
+//GUI components		
 //JFrame settings
 		frame = new JFrame();
 		frame.setResizable(false);

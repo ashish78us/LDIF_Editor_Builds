@@ -1057,7 +1057,7 @@ public class Regular_Update extends JFrame {
 		}
 		return 0;
 	} // End of check_param(StringBuilder sb)
-//Product file and Selected product match
+//Match of Product file and Selected product
 	public int ProductFileMatch(StringBuilder sb) {
 		int j = sb.indexOf(search_builder);		
 		if (j == -1) {

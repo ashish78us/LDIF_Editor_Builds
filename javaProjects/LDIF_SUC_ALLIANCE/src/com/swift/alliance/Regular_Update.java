@@ -409,14 +409,15 @@ public class Regular_Update extends JFrame {
 	}// End of Constructor
 
 	public void LdifSearch(String Version) {
-//Version is input to this function by the callee
-		if (Version == "") {label.setText("Version field cannot be empty");return; }		
+//Get file latest content		
+		sb = OpenFileAsStringB();
+		//'Version' is input to this function by the callee
+		if (Version == "" || ProductFileMatch(sb) !=0 ) {label.setText("Version field cannot be empty");return; }		
 		label.setText("");
 		textField_2.setBackground(Color.white);
 		textField_2.setText(Version);
 		//System.out.println("VersionInsideSearch="+ Version);			
-//Get file latest content		
-		sb = OpenFileAsStringB();
+
 //Check if file was empty		
 		if (sb == null) 
 		{ 
@@ -472,7 +473,7 @@ public class Regular_Update extends JFrame {
 		int start_of_version = sb.lastIndexOf("<",k);
 	// Find the end of the text to be highlighted i.e. value of b_to_update +2
 		int stop_of_version = sb.indexOf("/>", k);
-		System.out.println("StartOfVersion="+start_of_version+"  "+ "StopOfVersion=" + stop_of_version + "  " + "  "+ "IndexNo="+all_vers1.getIndexOf(prod_version_high));
+		//System.out.println("StartOfVersion="+start_of_version+"  "+ "StopOfVersion=" + stop_of_version + "  " + "  "+ "IndexNo="+all_vers1.getIndexOf(prod_version_high));
 	//Resetting common variables
 		k=0;		
 		try {
@@ -482,13 +483,13 @@ public class Regular_Update extends JFrame {
 	//If condition to see if the version filed is not empty otherwise parsing will return error
 			if (textField.getText() != "") {
 				if (Integer.parseInt(textField.getText()) < Integer.parseInt(Date_reg)) {
-					//For every new line character offset of 11 is added until "<Updates>"					
+					//For every new line character offset of 9 (new line added in LDIF4SoftwareUpdateCheck.ShowFileContent())  is added until "<Updates>" and for stop offset is 9 + 2 (for />)					
 					//high.addHighlight(b_to_update-1+all_vers1.getIndexOf(prod_version_high)+11, d_sof_sec_stop+2+all_vers1.getIndexOf(prod_version_high)+7, red);
-					high.addHighlight(start_of_version+9+(all_vers1.getIndexOf(prod_version_high)),stop_of_version+12+(all_vers1.getIndexOf(prod_version_high)), red);
+					high.addHighlight(start_of_version+9+(all_vers1.getIndexOf(prod_version_high)),stop_of_version+9+(all_vers1.getIndexOf(prod_version_high)+2), red);
 					label.setText("This version is out of support.");
 				} else {					
 					//high.addHighlight(b_to_update-1+all_vers1.getIndexOf(prod_version_high)+11, d_sof_sec_stop+2+all_vers1.getIndexOf(prod_version_high)+7, green);
-					high.addHighlight(start_of_version+9+(all_vers1.getIndexOf(prod_version_high)),stop_of_version+12+(all_vers1.getIndexOf(prod_version_high)), green);
+					high.addHighlight(start_of_version+9+(all_vers1.getIndexOf(prod_version_high)),stop_of_version+9+(all_vers1.getIndexOf(prod_version_high)+2), green);
 				}// end of if
 			}// End of "if (textField.getText() != "")"
 		} // End of Try block
@@ -546,7 +547,13 @@ public class Regular_Update extends JFrame {
 		LdifSearch(textField_2.getText());
 		rg_sb = "";
 		sb = null;
+	//Add code to check if version field is not empty and Product selected and file match
+		sb = OpenFileAsStringB();
+		//'Version' is input to this function by the callee
+		if (textField_2.getText() == "" || ProductFileMatch(sb) !=0 ) {label.setText("Version field is empty OR File is not for this product");return; }
+		else {
 		high_function(textField_2.getText(), "searchButton");
+		}
 		rg_sb = "";
 		sb = null;
 		curr_index = all_vers1.getIndexOf(textField_2.getText());
@@ -917,11 +924,13 @@ public class Regular_Update extends JFrame {
 		//Highlight the selected version
 			    high_function(all_vers1.getElementAt(0),"delete"); // keeps ab value
 			    rg_sb = "";
-			    sb = null;			    
+			    sb = null;	
+		// Feedback of the operation textField_2.getText()
+			    label.setText(rg_prod_version + " version deleted");   
 		    }
 		    else {label.setText("There is no record to delete.");}
 		} else
-			label.setText("No operation done");
+			label.setText("Nothing modified");
 	} // End of delete_buttonF()
 	public void modify_buttonF() {
 //Reset common variables		
@@ -982,7 +991,7 @@ public class Regular_Update extends JFrame {
 			rg_sb = "";
 			sb = null;
 //Setting final feedback
-			label.setText("Record Modified");
+			label.setText(textField_2.getText() + " version modified");
 
 		} else
 			label.setText("Record not found");

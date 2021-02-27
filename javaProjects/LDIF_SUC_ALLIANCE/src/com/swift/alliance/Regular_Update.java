@@ -775,8 +775,9 @@ public class Regular_Update extends JFrame {
 				}
 			// version will be added at the end
 				else if (r>=(all_vers1.getSize()-1)) {  
+					
 					Product_version = all_vers1.getElementAt(all_vers1.getSize()-1);
-					//addVersion4AddF(sb,Product_version, Product_version_add, r);					
+				//addVersion4AddF(sb,Product_version, Product_version_add, r);					
 					k = sb.indexOf("n=\""+Product_version);
 				//from where the addition will take place
 					k = sb.indexOf("/>",k);//from where the addition will take place
@@ -831,10 +832,11 @@ public class Regular_Update extends JFrame {
 				// Feedback of the operation
 				    LDIF4SoftwareUpdateCheck.obj_ru.label.setText(textField_2.getText() + " added in file.");	
 					return;	
-					}				
-			}
+				}//end of else if (r>=(all_vers1.getSize()-1))
+				
+			} // end of for loop
 			return;
-		}
+		}// end of else
 	} // End of add_buttonF()
 	public void delete_buttonF() {
 	//Reset common variables
@@ -1084,9 +1086,18 @@ public class Regular_Update extends JFrame {
 		return 0;
 	}
 	public void addVersion4AddF(StringBuilder sb,String Product_version, String Product_version_add, int r) {
-		k = sb.indexOf("n=\""+Product_version);
+	  //If condition if the record needs to be added at 0 index
+		if (r==0) {
+		//Record to be added after "</Releases>+11"
+			k = sb.indexOf("<Updates>");
+			k=k+9;				
+		}
+		else {
+			k = sb.indexOf("n=\""+Product_version);
 		//Point from where the addition will take place
 			k = sb.indexOf("/>",k);
+			k= k+2;
+		}
 		//Resetting some variables	
 			int int_mand = 2;
 			String str_softsec = "";
@@ -1106,19 +1117,18 @@ public class Regular_Update extends JFrame {
 					textField_1.getText() + "\" d=\"" + textArea.getText() + "\" m=\"" + 
 					int_mand + "\" n=\"" + textField_2.getText() + "\" k=\"" + str_softsec + "\"/>" ;                  
 			//sb.insert(update_start+k+2, tobe_added);	
-			sb.insert(k+2, tobe_added);
+			sb.insert(k, tobe_added);
 			file_write_fromSB(sb);
 		//Resetting variables	
 			int_mand = 2;					
 			rg_sb = "";
-			sb = null;					
-		//Adding element from version drop down comboBox_2			
-			all_vers1.insertElementAt(textField_2.getText(),r);
+			sb = null;	
+		//Adding element from version drop down comboBox_2
+			  all_vers1.insertElementAt(textField_2.getText(),r);			 
 		// Refresh file content
-		    ldsuc1.ShowFileContent();
-		//Setting curr_index for next version to highlight which will be same as the one deleted.
-			curr_index = r ; 
-			LDIF4SoftwareUpdateCheck.ldsuc_curr_index = r ;					
+		    ldsuc1.ShowFileContent();			
+		//Setting curr_index for next version to highlight which will be same as the one deleted. 
+			curr_index = r ; LDIF4SoftwareUpdateCheck.ldsuc_curr_index = r ;			 				
 		//set both version comboBox_2 and version filled same value for next version
 			LDIF4SoftwareUpdateCheck.obj_ru.textField_2.setText(all_vers1.getSelectedItem().toString());
 			LDIF4SoftwareUpdateCheck.obj_ru.comboBox_2.setSelectedIndex(LDIF4SoftwareUpdateCheck.ldsuc_curr_index);

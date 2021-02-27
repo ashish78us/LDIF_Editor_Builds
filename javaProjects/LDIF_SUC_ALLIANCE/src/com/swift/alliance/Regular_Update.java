@@ -63,8 +63,8 @@ public class Regular_Update extends JFrame {
 	private static String software_type = "Software";
 	private static String rg_prod_version = "";
 	private static String rg_sb = "";
-	private static int k = 0, m_stop_desc = 0, l_start_desc = 0, a_from_update = 0, b_to_update = 0 ;
-	private static int c_mand = 0, d_sof_sec_start = 0, d_sof_sec_stop = 0, update_start = 0, update_end = 0;
+	private static int k = 0, m_stop_desc = 0, l_start_desc = 0, a_from_update = 0, b_to_update = 0, d_sof_sec_stop =0;
+	private static int c_mand = 0, d_sof_sec_start = 0, update_start = 0, update_end = 0;
 	private static StringBuilder sb;
 	private static String soft_sec = "software";
 	private static int curr_index = 0;
@@ -468,35 +468,34 @@ public class Regular_Update extends JFrame {
 		high.removeAllHighlights();
 		sb = OpenFileAsStringB();
 		k = sb.indexOf("n=\"" + prod_version_high);// check later the boundary. Should not return -1
-		d_sof_sec_stop = sb.indexOf("<",k);
-		b_to_update = sb.lastIndexOf("/>", k);
-		//System.out.println("Version="+prod_version_high+"  "+ "start=" + b_to_update + "  " + "Last=" + d_sof_sec_stop +"  "+ "IndexNo="+all_vers1.getIndexOf(prod_version_high));
-		//sb= null;
-		k=0;
-	
-		
+	// Find the start of the text to be highlighted i.e. value of d_sof_sec_stop
+		int start_of_version = sb.lastIndexOf("<",k);
+	// Find the end of the text to be highlighted i.e. value of b_to_update +2
+		int stop_of_version = sb.indexOf("/>", k);
+		System.out.println("StartOfVersion="+start_of_version+"  "+ "StopOfVersion=" + stop_of_version + "  " + "  "+ "IndexNo="+all_vers1.getIndexOf(prod_version_high));
+	//Resetting common variables
+		k=0;		
 		try {
-			HighlightPainter color_high = new DefaultHighlighter.DefaultHighlightPainter(Color.GREEN);
+	// Get Green and Red color highlighter
+			HighlightPainter green = new DefaultHighlighter.DefaultHighlightPainter(Color.GREEN);
 			HighlightPainter red = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
-			
+	//If condition to see if the version filed is not empty otherwise parsing will return error
 			if (textField.getText() != "") {
-
-			if (Integer.parseInt(textField.getText()) < Integer.parseInt(Date_reg)) {
-				high.addHighlight(b_to_update-1+all_vers1.getIndexOf(prod_version_high)+11, d_sof_sec_stop+2+all_vers1.getIndexOf(prod_version_high)+7, red);
-				label.setText("This version is out of support.");
-
-			} else {
-				high.addHighlight(b_to_update-1+all_vers1.getIndexOf(prod_version_high)+11, d_sof_sec_stop+2+all_vers1.getIndexOf(prod_version_high)+7, color_high);
-			}
-			}
-		} catch (BadLocationException e3) {
+				if (Integer.parseInt(textField.getText()) < Integer.parseInt(Date_reg)) {
+					//For every new line character offset of 11 is added until "<Updates>"					
+					//high.addHighlight(b_to_update-1+all_vers1.getIndexOf(prod_version_high)+11, d_sof_sec_stop+2+all_vers1.getIndexOf(prod_version_high)+7, red);
+					high.addHighlight(start_of_version+9+(all_vers1.getIndexOf(prod_version_high)),stop_of_version+12+(all_vers1.getIndexOf(prod_version_high)), red);
+					label.setText("This version is out of support.");
+				} else {					
+					//high.addHighlight(b_to_update-1+all_vers1.getIndexOf(prod_version_high)+11, d_sof_sec_stop+2+all_vers1.getIndexOf(prod_version_high)+7, green);
+					high.addHighlight(start_of_version+9+(all_vers1.getIndexOf(prod_version_high)),stop_of_version+12+(all_vers1.getIndexOf(prod_version_high)), green);
+				}// end of if
+			}// End of "if (textField.getText() != "")"
+		} // End of Try block
+		catch (BadLocationException e3) {
 			// TODO Auto-generated catch block
-			/*
-			 * System.out.println("a_from_update=" + a_from_update);
-			 * System.out.println("b_to_update=" + b_to_update);
-			 */
 			e3.printStackTrace();
-		}
+		}// End of catch
 	} // End of high_function()	
 	public void text_field_const(KeyEvent arg0, JTextField textField) {
 		String till_date = textField.getText();
@@ -1174,7 +1173,13 @@ System.out.println("in last record else if condition");
 			//ldsuc1.reg_upd_fn();
 			 * Regular_Update.curr_index = LDIF4SoftwareUpdateCheck.ldsuc_curr_index;
 System.out.println("R=" + r + "   " + "ldsuc_curr=" + LDIF4SoftwareUpdateCheck.ldsuc_curr_index );
-
+//System.out.println("StartHigh=" + (414+(d_sof_sec_stop-398)+all_vers1.getIndexOf(prod_version_high)) + "   " + "EndHigh=" + ((414+(d_sof_sec_stop-398)+all_vers1.getIndexOf(prod_version_high))+(b_to_update-d_sof_sec_stop)));
+//System.out.println("StartHigh=" + 17+d_sof_sec_stop+all_vers1.getIndexOf(prod_version_high) + "   " + "EndHigh=" + (17+d_sof_sec_stop+all_vers1.getIndexOf(prod_version_high))+(b_to_update-d_sof_sec_stop)); 
+ * 
+ * 
+ * 
+ * 
+ * 
 *
 *
 */

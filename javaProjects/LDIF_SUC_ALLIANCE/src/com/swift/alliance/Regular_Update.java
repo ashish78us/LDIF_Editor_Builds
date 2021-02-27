@@ -163,7 +163,7 @@ public class Regular_Update extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				textField_2.setEditable(true);
-				label.setText("");
+				setFeedback("","JtextField_2_addMouseListener_mouseClicked");
 			}
 		});
 		textField_2.addKeyListener(new KeyAdapter() {
@@ -176,18 +176,19 @@ public class Regular_Update extends JFrame {
 				if (((arg0.getKeyChar() >= '0' && arg0.getKeyChar() <= '9') || arg0.getKeyChar() == '.')
 						&& length < 6) {
 					textField_2.setEditable(true);
-					label.setText("");
+					setFeedback("","TextField_2_addKeyListener_keyPressed");
 				}
 				else {
 					textField_2.setEditable(false);
-					label.setText("Character not allowed OR length(6) exceeded.");
+					setFeedback("Character not allowed OR length(6) exceeded.","TextField_2_addKeyListener_keyPressed_else");
 
 				}
 				if (arg0.getExtendedKeyCode() == KeyEvent.VK_BACK_SPACE
 						|| arg0.getExtendedKeyCode() == KeyEvent.VK_DELETE) {
 
 					textField_2.setEditable(true);
-					label.setText("");
+					setFeedback("","TextField_2_addKeyListener_keyPressed_SecondIF");
+					
 				}
 			}
 		});
@@ -214,7 +215,7 @@ public class Regular_Update extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				textField.setEditable(true);
-				label.setText("");
+				setFeedback("","TextField_MouseListener_mouseClicked");
 			}
 		});
 		textField.addKeyListener(new KeyAdapter() {
@@ -237,7 +238,7 @@ public class Regular_Update extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				textField_1.setEditable(true);
-				label.setText("");
+				setFeedback("","TextField_1_addMouseListener_MouseClicked");
 			}
 		});
 		textField_1.addKeyListener(new KeyAdapter() {
@@ -266,24 +267,30 @@ public class Regular_Update extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				textArea.setEditable(true);
-				label.setText("");
+				setFeedback("","textArea_addMouseListener_MouseClicked");
 			}
 		});
 		textArea.addKeyListener(new KeyAdapter() {
+			
+			String feedback ="";
 			@Override
 			public void keyPressed(KeyEvent e) {
 				String description = textArea.getText();
 				int length = description.length();
-				label.setText("Description length=" + length);
+				feedback = "Description length=" + length;
+				setFeedback(feedback,"textArea_addKeyListener_keyPressed");
 				if (length >= 100) {
 					textArea.setEditable(false);
 					label.setText("Maximum character length (100) reached.");
+					setFeedback("Maximum character length (100) reached.","textArea_addKeyListener_keyPressed_if");
 				} else {
 					textArea.setEditable(true);
-					label.setText("Description length=" + length);
+					feedback = "Description length=" + length;
+					setFeedback(feedback,"textArea_addKeyListener_keyPressed_else");
 				}
 				if (e.getExtendedKeyCode() == KeyEvent.VK_BACK_SPACE || e.getExtendedKeyCode() == KeyEvent.VK_DELETE) {
-					label.setText("Description length=" + length);
+					feedback = "Description length=" + length;
+					setFeedback(feedback,"textArea_addKeyListener_keyPressed_secondIf");
 					textArea.setEditable(true);
 				}
 			}
@@ -300,7 +307,7 @@ public class Regular_Update extends JFrame {
 		rdbtnNewRadioButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				label.setText("");
+				setFeedback("","rdbtnNewRadioButton_addMouseL_mouseClicked");
 			}
 		});
 //Radio Button for mandatory "No"	
@@ -310,7 +317,7 @@ public class Regular_Update extends JFrame {
 		rdbtnNo.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				label.setText("");
+				setFeedback("","rdbtnNo_addMouseL_mouseClicked");
 			}
 		});
 //Radio button group
@@ -328,7 +335,7 @@ public class Regular_Update extends JFrame {
 		comboBox_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				label.setText("");
+				setFeedback("","comboBox_1_addMouseL_mouseClicked");
 			}
 		});		
 		comboBox_1.addActionListener(new ActionListener() {
@@ -342,16 +349,7 @@ public class Regular_Update extends JFrame {
 		contentPane.add(btnClearAll);
 		btnClearAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				textField_2.setText(null);
-				textField.setText(null);
-				textField_1.setText(null);
-				textArea.setText(null);
-				rdbtnNewRadioButton.setSelected(false);
-				rdbtnNo.setSelected(false);
-				comboBox_1.setSelectedItem("software");
-				label.setText("");
-				rg_sb = "";
-				sb = null;
+				clearButton();
 			}
 		});
 //JButton for PREVIOUS
@@ -412,8 +410,10 @@ public class Regular_Update extends JFrame {
 //Get file latest content		
 		sb = OpenFileAsStringB();
 		//'Version' is input to this function by the callee
-		if (Version == "" || ProductFileMatch(sb) !=0 ) {label.setText("Version field cannot be empty");return; }		
-		label.setText("");
+		if (Version == "" || ProductFileMatch(sb) !=0 ) {
+			setFeedback("Version field cannot be empty","LdifSearch_versionEmpty");
+			return; }		
+		setFeedback("","LdifSearch_1");
 		textField_2.setBackground(Color.white);
 		textField_2.setText(Version);
 		//System.out.println("VersionInsideSearch="+ Version);			
@@ -421,12 +421,12 @@ public class Regular_Update extends JFrame {
 //Check if file was empty		
 		if (sb == null) 
 		{ 
-			label.setText("Error Encountered in reading file.");
+			setFeedback("Error Encountered in reading file.","LdifSearch_sbEmpty_2");
 			return; 
 		}
 //Product File vs Selected product match, version parameters check
-		if (ProductFileMatch(sb) !=0) {return;}
-		if (check_param_version(sb) != 0) {return;}
+		if (ProductFileMatch(sb) < 0) {return;}
+		if (check_param_version(sb)< 0) {return;}
 //Core of Search function
 		update_start = sb.lastIndexOf("<", k);
 		update_end = sb.indexOf(">", k);
@@ -463,7 +463,7 @@ public class Regular_Update extends JFrame {
 		}
 	// Resetting variables		
 		  k = 0; update_start = 0; update_end = 0; 
-		  label.setText("");
+		  setFeedback("","LdifSearch_resetting_3");
 	}// end of LdifSearch()
 	public void high_function(String prod_version_high, String operation) {
 		high.removeAllHighlights();
@@ -486,7 +486,7 @@ public class Regular_Update extends JFrame {
 					//For every new line character offset of 9 (new line added in LDIF4SoftwareUpdateCheck.ShowFileContent())  is added until "<Updates>" and for stop offset is 9 + 2 (for />)					
 					//high.addHighlight(b_to_update-1+all_vers1.getIndexOf(prod_version_high)+11, d_sof_sec_stop+2+all_vers1.getIndexOf(prod_version_high)+7, red);
 					high.addHighlight(start_of_version+9+(all_vers1.getIndexOf(prod_version_high)),stop_of_version+9+(all_vers1.getIndexOf(prod_version_high)+2), red);
-					label.setText("This version is out of support.");
+					setFeedback("This version is out of support.","High_Func_red");
 				} else {					
 					//high.addHighlight(b_to_update-1+all_vers1.getIndexOf(prod_version_high)+11, d_sof_sec_stop+2+all_vers1.getIndexOf(prod_version_high)+7, green);
 					high.addHighlight(start_of_version+9+(all_vers1.getIndexOf(prod_version_high)),stop_of_version+9+(all_vers1.getIndexOf(prod_version_high)+2), green);
@@ -550,7 +550,10 @@ public class Regular_Update extends JFrame {
 	//Add code to check if version field is not empty and Product selected and file match
 		sb = OpenFileAsStringB();
 		//'Version' is input to this function by the callee
-		if (textField_2.getText() == "" || ProductFileMatch(sb) !=0 ) {label.setText("Version field is empty OR File is not for this product");return; }
+		if (textField_2.getText() == "" || ProductFileMatch(sb) !=0 ) {
+			setFeedback("Version field is empty OR File is not for this product","SearchButton_emptyVersion");
+			return; 
+			}
 		else {
 		high_function(textField_2.getText(), "searchButton");
 		}
@@ -559,17 +562,18 @@ public class Regular_Update extends JFrame {
 		curr_index = all_vers1.getIndexOf(textField_2.getText());
 	} // End of searchButtonF()
 	public void previous_buttonF() {
-		ldsuc1.lblNewLabel.setText("");
-		if ((curr_index) == 0) {
-			label.setText("This is the FIRST version in the file.");
+		setFeedback("","PreviousButton_settingEmpty");
+		//System.out.println("Version="+ textField_2.getText());   check again
+		if ((curr_index == 0) && (textField_2.getText() != "")) {
+			setFeedback("This is the FIRST version in the file.","PreviousButton_FirstVersion");
 			return;
 		}
 		rg_prod_version = all_vers1.getElementAt(curr_index - 1);				
-		label.setText("");
+		setFeedback("","PreviousButton_settingEmpty_2");
 		sb = OpenFileAsStringB();
 		int j = sb.indexOf(search_builder); // checking the product in the file and selected product
 		if (j == -1) {
-			label.setText("File does not match with selected product.");
+			setFeedback("File does not match with selected product.","PreviousButton_FileNotMatch");
 			rg_sb = "";
 			return;
 		}
@@ -578,11 +582,13 @@ public class Regular_Update extends JFrame {
 			} 
 		else {
 			label.setText("Version field is mandatory and of fixed length(6)");
+			setFeedback("Version field is mandatory and of fixed length(6)","PreviousButton_VersionMand_inElse");
 			rg_sb = "";
 			return;
 		}
 		if (k == -1) {
 			label.setText("Version not found.");
+			setFeedback("Version not found.","PreviousButton_VersionNotFound");
 			rg_sb = "";
 			return;
 		}
@@ -620,7 +626,7 @@ public class Regular_Update extends JFrame {
 		update_start = 0;
 		update_end = 0;
 		rg_sb = "";
-		label.setText("");
+		setFeedback("","PreviousButton_resetting_beforeHF");
 		curr_index = curr_index - 1;
 		high_function(rg_prod_version, "previous");
 		rg_sb = "";
@@ -628,20 +634,20 @@ public class Regular_Update extends JFrame {
 		comboBox_2.setSelectedIndex(curr_index);
 	} // End of previous_buttonF()
 	public void next_buttonF() {
-		ldsuc1.lblNewLabel.setText("");
+		setFeedback("","NextButton_resetting_1");
 		int array_count = all_vers1.getSize();
-		if ((curr_index) == array_count - 1) {
-			label.setText("This is the LAST version in the file.");
+		if ((curr_index == array_count - 1) && (textField_2.getText() != "")) {
+			setFeedback("This is the LAST version in the file.","NextButton_1");
 			return;
 		}
 		rg_prod_version = all_vers1.getElementAt(curr_index + 1);
-		label.setText("");
+		setFeedback("This is the LAST version in the file.","NextButton_resetting_2");
 		sb = OpenFileAsStringB();
 		int j = sb.indexOf(search_builder); // checking the product in the file and selected product
 		if (j == -1) {
 			// JOptionPane.showMessageDialog(null, "Select correct product for this LDIF
 			// file");
-			label.setText("File does not match with selected product.");
+			setFeedback("File does not match with selected product.","NextButton_FileNotMatch");
 			rg_sb = "";
 			return;
 		}
@@ -651,12 +657,12 @@ public class Regular_Update extends JFrame {
 			// System.out.println("Version="+rg_prod_version+".");
 
 		} else {
-			label.setText("Version field is mandatory and of fixed length(6)");
+			setFeedback("Version field is mandatory and of fixed length(6)","NextButton_textField_2_else");
 			rg_sb = "";
 			return;
 		}
 		if (k == -1) {
-			label.setText("Version not found.");
+			setFeedback("Version not found.","NextButton_kEqualto-1Check");
 			rg_sb = "";
 			return;
 		}
@@ -702,7 +708,7 @@ public class Regular_Update extends JFrame {
 		update_start = 0;
 		update_end = 0;
 		rg_sb = "";
-		label.setText("");
+		setFeedback("","NextButton_Resetting");
 		// System.out.println(sb.toString());
 
 		curr_index = curr_index + 1;
@@ -715,7 +721,7 @@ public class Regular_Update extends JFrame {
 	} // End of next_buttonF()
 	public void add_buttonF() {
 //Reset common variables
-		label.setText("");
+		setFeedback("","addButton_Resetting");
 		rg_sb = "";
 		sb = null;
 		String Product_version_add = textField_2.getText();
@@ -725,11 +731,11 @@ public class Regular_Update extends JFrame {
 //Check if file was empty		
 		  if (sb == null) 
 		  { 
-		  label.setText("Error Encountered in reading file.");
+		  setFeedback("Error Encountered in reading file.","addButton_FileEmpty");
 		  return; 
 		  }
 //Product File vs Selected product match, version parameters check
-		  if (ProductFileMatch(sb) !=0) {return;}
+		  if (ProductFileMatch(sb) <0) {return;}
 		 // if (check_param_version(sb) != 0) {return;}
 // Check if version already exist or not
 		k = sb.indexOf("n=\"" + Product_version_add);
@@ -820,9 +826,10 @@ public class Regular_Update extends JFrame {
 				//Setting curr_index for next version to highlight which will be same as the one deleted.
 					curr_index = r +1; 
 					LDIF4SoftwareUpdateCheck.ldsuc_curr_index = r + 1;				
-				//set both version comboBox_2 and version filled same value for newly added version	
-					LDIF4SoftwareUpdateCheck.obj_ru.textField_2.setText(all_vers1.getSelectedItem().toString());
-					LDIF4SoftwareUpdateCheck.obj_ru.comboBox_2.setSelectedIndex(LDIF4SoftwareUpdateCheck.ldsuc_curr_index);					
+				//set both version comboBox_2 and version filled same value for newly added version
+					if (all_vers1.getSelectedItem()!=null)
+					{LDIF4SoftwareUpdateCheck.obj_ru.textField_2.setText(all_vers1.getSelectedItem().toString());
+					LDIF4SoftwareUpdateCheck.obj_ru.comboBox_2.setSelectedIndex(LDIF4SoftwareUpdateCheck.ldsuc_curr_index);	}				
 				//Call search method on the version at same index as added
 					LDIF4SoftwareUpdateCheck.obj_ru.LdifSearch(LDIF4SoftwareUpdateCheck.ds.getElementAt(LDIF4SoftwareUpdateCheck.ldsuc_curr_index));   // to get all the values in the GUI	// keeps sb value		    
 					//LDIF4SoftwareUpdateCheck.obj_ru.curr_index = LDIF4SoftwareUpdateCheck.ldsuc_curr_index;
@@ -836,7 +843,8 @@ public class Regular_Update extends JFrame {
 				    rg_sb = "";
 				    sb = null;
 				// Feedback of the operation
-				    LDIF4SoftwareUpdateCheck.obj_ru.label.setText(textField_2.getText() + " added in file.");	
+				    String feedback = textField_2.getText() + " added in file.";
+				    setFeedback(feedback,"addButton_RecordAdded");
 					return;	
 				}//end of else if (r>=(all_vers1.getSize()-1))
 				
@@ -846,8 +854,7 @@ public class Regular_Update extends JFrame {
 	} // End of add_buttonF()
 	public void delete_buttonF() {
 	//Reset common variables
-		label.setText("");
-		LDIF4SoftwareUpdateCheck.lblNewLabel.setText("");
+		setFeedback("","deleteButton_FirstReset");
 		rg_sb = "";
 		sb = null;
 	//Get file latest content		
@@ -855,15 +862,15 @@ public class Regular_Update extends JFrame {
 	//Check if file was empty		
 				  if (sb == null) 
 				  { 
-				  label.setText("Error Encountered in reading file.");
+				  setFeedback("Error Encountered in reading file.","deleteButton_FileReadingerror");
 				  return; 
 				  }
 	//Product File vs Selected product match, version parameters check
-				  if (ProductFileMatch(sb) !=0) {return;}
-				  if (check_param_version(sb) != 0) {return;}
+				  if (ProductFileMatch(sb) < 0) {return;}
+				  if (check_param_version(sb) < 0) {clearButton(); return;}
 	//Saving current index of the version to be deleted
 		LDIF4SoftwareUpdateCheck.ldsuc_curr_index = all_vers1.getIndexOf(rg_prod_version);
-		
+		String Vdeleted = rg_prod_version;
 	//Delete function core
 		if (k != -1) {
 			update_start = sb.lastIndexOf("<", k);
@@ -892,8 +899,9 @@ public class Regular_Update extends JFrame {
 		    if (LDIF4SoftwareUpdateCheck.ldsuc_curr_index < LDIF4SoftwareUpdateCheck.ds.getSize())
 		    {
 		//set both version comboBox_2 and version filled same value for next version
-			LDIF4SoftwareUpdateCheck.obj_ru.textField_2.setText(all_vers1.getSelectedItem().toString());
-			LDIF4SoftwareUpdateCheck.obj_ru.comboBox_2.setSelectedIndex(LDIF4SoftwareUpdateCheck.ldsuc_curr_index);
+		    if 	(all_vers1.getSelectedItem() != null)
+			{LDIF4SoftwareUpdateCheck.obj_ru.textField_2.setText(all_vers1.getSelectedItem().toString());
+			LDIF4SoftwareUpdateCheck.obj_ru.comboBox_2.setSelectedIndex(LDIF4SoftwareUpdateCheck.ldsuc_curr_index);}
 		//Call search method on the version at same index as deleted before (next version after deletion)
 			LDIF4SoftwareUpdateCheck.obj_ru.LdifSearch(LDIF4SoftwareUpdateCheck.ds.getElementAt(LDIF4SoftwareUpdateCheck.ldsuc_curr_index));   // to get all the values in the GUI	// keeps sb value		    
 		//Resetting variables
@@ -926,15 +934,18 @@ public class Regular_Update extends JFrame {
 			    rg_sb = "";
 			    sb = null;	
 		// Feedback of the operation textField_2.getText()
-			    label.setText(rg_prod_version + " version deleted");   
+			    String feedback = Vdeleted + " version deleted";
+			    setFeedback(feedback,"deleteButton_Version deleted");
 		    }
 		    else {label.setText("There is no record to delete.");}
-		} else
+		} else {
 			label.setText("Nothing modified");
+			return;
+		}
 	} // End of delete_buttonF()
 	public void modify_buttonF() {
 //Reset common variables		
-		label.setText("");
+		setFeedback("","modifyButton_FirstReset");
 		rg_sb = "";
 		sb = null;
 //Get file latest content		
@@ -942,12 +953,12 @@ public class Regular_Update extends JFrame {
 //Check if file was empty		
 		  if (sb == null) 
 		  { 
-		  label.setText("Error Encountered in reading file.");
+		  setFeedback("Error Encountered in reading file.","modifyButton_FileReadingError");
 		  return; 
 		  }
 //Product File vs Selected product match, version parameters check
-		  if (ProductFileMatch(sb) !=0) {return;}
-		  if (check_param_version(sb) != 0) {return;}
+		  if (ProductFileMatch(sb) < 0) {return;}
+		  if (check_param_version(sb) < 0) {return;}
 		 
 //Modify core 		
 		if (k != -1) {
@@ -991,7 +1002,8 @@ public class Regular_Update extends JFrame {
 			rg_sb = "";
 			sb = null;
 //Setting final feedback
-			label.setText(textField_2.getText() + " version modified");
+			String feedback = textField_2.getText() + " version modified";
+			setFeedback(feedback,"modifyButton_versionModified");
 
 		} else
 			label.setText("Record not found");
@@ -1010,9 +1022,9 @@ public class Regular_Update extends JFrame {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
-				label.setText("File I/O exception");
+				label.setText("File I/O exception in OpenFileAsStringB ");
 			else
-				label.setText("File I/O exception");
+				label.setText("File I/O exception OpenFileAsStringB");
 		} catch (NullPointerException npe) {
 			if (LDIF4SoftwareUpdateCheck.textField.getText() == "")
 				label.setText("Select the file");
@@ -1053,14 +1065,14 @@ public class Regular_Update extends JFrame {
 		if (textField_2.getText().length() != 0 && textField_2.getText().length() >= 6) {
 			k = sb.indexOf("n=\"" + rg_prod_version);// check later the boundary. Should not return -1
 			if (k == -1) {
-				label.setText("Version not found.");
+				setFeedback("Version not found.","check_param_version_knotEqualto-1");
 				rg_sb = "";
 				sb = null;
 				textField_2.setBackground(Color.red);
 				return -1;
 			}
 		} else {
-			label.setText("Version field is mandatory and of fixed length(6)");
+			setFeedback("Version field is mandatory and of fixed length(6)","check_param_versionMandatory");
 			rg_sb = "";
 			sb = null;
 			return -2;
@@ -1073,7 +1085,7 @@ public class Regular_Update extends JFrame {
 		if (j == -1) {
 			// JOptionPane.showMessageDialog(null, "Select correct product for this LDIF
 			// file");
-			label.setText("File does not match with selected product.");
+			setFeedback("File does not match with selected product.","ProductFileMatch_JvariableCheck");
 			rg_sb = "";
 			sb = null;
 			return j;
@@ -1086,7 +1098,7 @@ public class Regular_Update extends JFrame {
 				|| (textField_1.getText().length() == 0 || textField_1.getText().length() < 8)
 				|| (textArea.getText().length() == 0) // || int_mand == 2
 		) {
-			label.setText("Fill all parameter.VersionLength=6, DateLength=8.");
+			setFeedback("Fill all parameter.VersionLength=6, DateLength=8.","all_param_check_ParamCheck");
 			rg_sb = "";
 			sb = null;
 			return -1;
@@ -1138,8 +1150,9 @@ public class Regular_Update extends JFrame {
 		//Setting curr_index for next version to highlight which will be same as the one deleted. 
 			curr_index = r ; LDIF4SoftwareUpdateCheck.ldsuc_curr_index = r ;			 				
 		//set both version comboBox_2 and version filled same value for next version
-			LDIF4SoftwareUpdateCheck.obj_ru.textField_2.setText(all_vers1.getSelectedItem().toString());
-			LDIF4SoftwareUpdateCheck.obj_ru.comboBox_2.setSelectedIndex(LDIF4SoftwareUpdateCheck.ldsuc_curr_index);
+			if (all_vers1.getSelectedItem()!=null)
+			{LDIF4SoftwareUpdateCheck.obj_ru.textField_2.setText(all_vers1.getSelectedItem().toString());
+			LDIF4SoftwareUpdateCheck.obj_ru.comboBox_2.setSelectedIndex(LDIF4SoftwareUpdateCheck.ldsuc_curr_index);}
 		//Call search method on the version at same index as deleted before (next version after deletion)
 			LDIF4SoftwareUpdateCheck.obj_ru.LdifSearch(LDIF4SoftwareUpdateCheck.ds.getElementAt(LDIF4SoftwareUpdateCheck.ldsuc_curr_index));   // to get all the values in the GUI	// keeps sb value		    
 		//Reset Variables	
@@ -1152,8 +1165,25 @@ public class Regular_Update extends JFrame {
 		    LDIF4SoftwareUpdateCheck.obj_ru.high_function(LDIF4SoftwareUpdateCheck.ds.getElementAt(curr_index),"add"); // keeps ab value
 		    rg_sb = "";
 		    sb = null;
-		    LDIF4SoftwareUpdateCheck.obj_ru.label.setText(Product_version_add + " added in file.");		    
+		    String feedback = Product_version_add + " added in file.";		
+		    setFeedback(feedback,"addVersion4AddF_VersionAdded");
 	} // End of addVersion4AddF
+	public void setFeedback(String text, String callingFunction) {
+		//System.out.println("Feedback=" + text + "     "+ "callinfunction=" +callingFunction);
+		label.setText(text);
+	}
+	public void clearButton() {		
+		textField_2.setText(null);
+		textField.setText(null);
+		textField_1.setText(null);
+		textArea.setText(null);
+		rdbtnNewRadioButton.setSelected(false);
+		rdbtnNo.setSelected(false);
+		comboBox_1.setSelectedItem("software");
+		setFeedback("","btnClearAll_addActionL_ActPer");
+		rg_sb = "";
+		sb = null;
+	}
 
 } // End of Class
 

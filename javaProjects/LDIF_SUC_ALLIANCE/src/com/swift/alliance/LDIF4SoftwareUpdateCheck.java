@@ -48,6 +48,7 @@ public class LDIF4SoftwareUpdateCheck {
 	static Regular_Update obj_ru;
 	static Yearly_Update obj_yu;
 	static int ldsuc_curr_index = 0;
+	static String FileValidation = "";
 	
 //Main Function	
 	public static void main(String[] args) {
@@ -70,7 +71,7 @@ public class LDIF4SoftwareUpdateCheck {
 	}// Enof of constructor
 	public void ShowFileContent() {
 		StringBuilder sb;
-		int first,next,arr_count=1,end_bb,k;		
+		int first,next,arr_count=1,end_bb,k;
 		try {
 			if (fd != null)
 			{				
@@ -79,6 +80,7 @@ public class LDIF4SoftwareUpdateCheck {
 				String buf = "";
 				int i;
 				lblNewLabel.setText("");
+				int count=0,countLF=0;
 				while((i=br.read())!=-1){  
 			      //Reading character whose decimal conversion is up to 5000  
 					if (i <= 5000) {					   
@@ -86,12 +88,21 @@ public class LDIF4SoftwareUpdateCheck {
 			        				if ((char)i== '>') {
 			        									buf = buf + "\n";
 			        									}// end of if
-			        				}//end of if
-			        else {
+			        	}//end of if
+					else {
 			        		lblNewLabel.setText("Selected file is not a text file");
 			        		buf = " ";
 			        	   	break;
 			        	}//else
+					if (i==10)		{
+						countLF++;
+						if (countLF>9) {
+							FileValidation = "File HAS more than expected Line Feed";
+						}
+						else {FileValidation = "File as no extra Line Feed";}
+			        	//System.out.println("There are LF and CF in the file" + "  " + "position=" + count + "  "+"count="+countLF);
+			        }
+					count++;
 			        } // While loop 
 				textArea.setText(buf);	
 				br.close();
@@ -244,6 +255,22 @@ public class LDIF4SoftwareUpdateCheck {
 		});
 		btnYearlyUpdate.setBounds(176, 98, 123, 23);
 		frame.getContentPane().add(btnYearlyUpdate);	
+// JButton for Validate File
+		JButton ValidateFile = new JButton("Validate File");
+		ValidateFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//lblNewLabel.setText("Coming in next release");
+				if (textField.getText() != " ") {
+					ShowFileContent();
+					JOptionPane.showMessageDialog(null,FileValidation);									
+				}
+				else {
+					JOptionPane.showMessageDialog(null,"File not selected OR not a valid LDIF file.");
+				}
+			}
+		});
+		ValidateFile.setBounds(321, 98, 115, 23);
+		frame.getContentPane().add(ValidateFile);
 //JLable for feedback		
 		//JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setBackground(Color.LIGHT_GRAY);
@@ -262,7 +289,7 @@ public class LDIF4SoftwareUpdateCheck {
 		textArea.setBorder(UIManager.getBorder("ScrollPane.border"));
 		textArea.setBackground(Color.WHITE);
 		textArea.setEditable(false);
-		textArea.setForeground(new Color(0, 0, 255));	
+		textArea.setForeground(new Color(0, 0, 255));		
 	}// end of initialize function
 }// class end
 

@@ -1188,6 +1188,10 @@ public class Regular_Update extends JFrame {
 		rg_sb = "";
 		sb = null;
 	}
+	public int LFandCRcheck() {
+		
+		return 0;
+	}
 
 } // End of Class
 

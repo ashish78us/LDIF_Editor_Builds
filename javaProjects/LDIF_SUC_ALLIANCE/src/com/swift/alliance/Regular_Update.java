@@ -293,6 +293,10 @@ public class Regular_Update extends JFrame {
 					setFeedback(feedback,"textArea_addKeyListener_keyPressed_secondIf");
 					textArea.setEditable(true);
 				}
+				if (e.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
+					setFeedback("ENTER key now allowed","textArea_addKeyListener_keyPressed_EnterKey");
+					textArea.setEditable(false);
+				}
 			}
 		});
 

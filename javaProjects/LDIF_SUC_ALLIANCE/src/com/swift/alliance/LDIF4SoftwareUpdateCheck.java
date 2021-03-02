@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
@@ -49,6 +50,7 @@ public class LDIF4SoftwareUpdateCheck {
 	static Yearly_Update obj_yu;
 	static int ldsuc_curr_index = 0;
 	static String FileValidation = "";
+	static ImageIcon icon;
 	
 //Main Function	
 	public static void main(String[] args) {
@@ -68,7 +70,7 @@ public class LDIF4SoftwareUpdateCheck {
 //Constructor
 	public LDIF4SoftwareUpdateCheck() {
 		initialize();
-	}// Enof of constructor
+	}// End of constructor
 	public void ShowFileContent() {
 		StringBuilder sb;
 		int first,next,arr_count=1,end_bb,k;
@@ -167,7 +169,9 @@ public class LDIF4SoftwareUpdateCheck {
 		frame.setBounds(100, 100, 555, 630);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		frame.setTitle("SWIFT Alliance LDIF editor");		
+		frame.setTitle("SWIFT Alliance LDIF editor");	
+		icon = new ImageIcon("images/swift.JPG");
+		frame.setIconImage(icon.getImage());
 //Menu for the Frame		
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);

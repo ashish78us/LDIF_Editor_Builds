@@ -1092,6 +1092,7 @@ public class Regular_Update extends JFrame {
 			setFeedback("File does not match with selected product.","ProductFileMatch_JvariableCheck");
 			rg_sb = "";
 			sb = null;
+			clearButton();
 			return j;
 		}
 		return 0;		

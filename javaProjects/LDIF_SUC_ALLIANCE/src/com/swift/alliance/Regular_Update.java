@@ -27,6 +27,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -36,6 +37,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import javax.swing.JFormattedTextField;
+import com.toedter.calendar.JDateChooser;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 
 public class Regular_Update extends JFrame {
@@ -72,6 +77,7 @@ public class Regular_Update extends JFrame {
 	private static DefaultComboBoxModel<String> all_vers1;
 	private static Highlighter high;
 	private static String Date_reg;
+	private static Date today;
 	private static LDIF4SoftwareUpdateCheck ldsuc1;
 	final int MAX_LENGTH = 99;	
 	
@@ -82,14 +88,18 @@ public class Regular_Update extends JFrame {
 		all_vers1 = all_vers;
 		ldsuc1=ldsuc;				
 		high = jta.getHighlighter();
-		Date today = new Date();
+		today = new Date();
+		//dt= new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-		Date_reg = dateFormat.format(today);		
+		Date_reg = dateFormat.format(today);
+		//dateFormat.format(dt);
+		
 //JFrame settings				
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(700, 100, 346, 421);
 		contentPane = new JPanel();
+		contentPane.setToolTipText("Date Picker");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -358,7 +368,7 @@ public class Regular_Update extends JFrame {
 		});
 //JButton for PREVIOUS
 		JButton btnPrevious = new JButton("Previous");
-		btnPrevious.setBounds(61, 291, 89, 23);
+		btnPrevious.setBounds(20, 291, 89, 23);
 		contentPane.add(btnPrevious);
 		btnPrevious.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -367,7 +377,7 @@ public class Regular_Update extends JFrame {
 		});
 //JButton for NEXT
 		JButton btnNext = new JButton("Next");
-		btnNext.setBounds(184, 291, 89, 23);
+		btnNext.setBounds(119, 291, 89, 23);
 		contentPane.add(btnNext);
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -407,6 +417,18 @@ public class Regular_Update extends JFrame {
 		label.setForeground(Color.RED);
 		label.setBounds(0, 359, 340, 22);
 		contentPane.add(label);
+//JDateChooser to tell Alliance product version is supported on the selected date or not.		
+		JDateChooser dateChooser = new JDateChooser(today);
+		dateChooser.setBounds(218, 294, 105, 20);
+		contentPane.add(dateChooser);
+		dateChooser.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				today = dateChooser.getDate();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+				Date_reg = dateFormat.format(today);
+				}
+		});
+		
 
 	}// End of Constructor
 
@@ -1193,7 +1215,6 @@ public class Regular_Update extends JFrame {
 		
 		return 0;
 	}
-
 } // End of Class
 
 // unused code

@@ -78,6 +78,7 @@ public class Regular_Update extends JFrame {
 	private static Highlighter high;
 	private static String Date_reg;
 	private static Date today;
+	private static JDateChooser dateChooser;
 	private static LDIF4SoftwareUpdateCheck ldsuc1;
 	final int MAX_LENGTH = 99;	
 	
@@ -89,11 +90,8 @@ public class Regular_Update extends JFrame {
 		ldsuc1=ldsuc;				
 		high = jta.getHighlighter();
 		today = new Date();
-		//dt= new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		Date_reg = dateFormat.format(today);
-		//dateFormat.format(dt);
-		
 //JFrame settings				
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -418,7 +416,7 @@ public class Regular_Update extends JFrame {
 		label.setBounds(0, 359, 340, 22);
 		contentPane.add(label);
 //JDateChooser to tell Alliance product version is supported on the selected date or not.		
-		JDateChooser dateChooser = new JDateChooser(today);
+		dateChooser = new JDateChooser(today);
 		dateChooser.setBounds(218, 294, 105, 20);
 		contentPane.add(dateChooser);
 		dateChooser.addPropertyChangeListener(new PropertyChangeListener() {
@@ -426,6 +424,7 @@ public class Regular_Update extends JFrame {
 				today = dateChooser.getDate();
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 				Date_reg = dateFormat.format(today);
+				high_function(textField_2.getText(), "dateChooser");
 				}
 		});
 		
@@ -522,7 +521,10 @@ public class Regular_Update extends JFrame {
 		catch (BadLocationException e3) {
 			// TODO Auto-generated catch block
 			e3.printStackTrace();
-		}// End of catch
+		}
+		catch (NumberFormatException aa1){
+			// End of catch
+		}
 	} // End of high_function()	
 	public void text_field_const(KeyEvent arg0, JTextField textField) {
 		String till_date = textField.getText();
@@ -1207,6 +1209,7 @@ public class Regular_Update extends JFrame {
 		rdbtnNewRadioButton.setSelected(false);
 		rdbtnNo.setSelected(false);
 		comboBox_1.setSelectedItem("software");
+		dateChooser.setDate(new Date());        
 		setFeedback("","btnClearAll_addActionL_ActPer");
 		rg_sb = "";
 		sb = null;

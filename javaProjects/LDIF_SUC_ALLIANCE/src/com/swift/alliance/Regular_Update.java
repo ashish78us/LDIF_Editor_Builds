@@ -97,7 +97,6 @@ public class Regular_Update extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(700, 100, 346, 421);
 		contentPane = new JPanel();
-		contentPane.setToolTipText("Date Picker");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -382,6 +381,18 @@ public class Regular_Update extends JFrame {
 			next_buttonF();
 			}
 		});
+//JDateChooser to tell Alliance product version is supported on the selected date or not.		
+				dateChooser = new JDateChooser(today);
+				dateChooser.setBounds(218, 294, 105, 20);
+				contentPane.add(dateChooser);
+				dateChooser.addPropertyChangeListener(new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent evt) {
+						today = dateChooser.getDate();
+						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+						Date_reg = dateFormat.format(today);
+						high_function(textField_2.getText(), "dateChooser");
+						}
+				});
 //JBUtton for Add
 		JButton btnAdd = new JButton("Add");
 		btnAdd.setBounds(15, 325, 89, 23);
@@ -415,18 +426,7 @@ public class Regular_Update extends JFrame {
 		label.setForeground(Color.RED);
 		label.setBounds(0, 359, 340, 22);
 		contentPane.add(label);
-//JDateChooser to tell Alliance product version is supported on the selected date or not.		
-		dateChooser = new JDateChooser(today);
-		dateChooser.setBounds(218, 294, 105, 20);
-		contentPane.add(dateChooser);
-		dateChooser.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				today = dateChooser.getDate();
-				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-				Date_reg = dateFormat.format(today);
-				high_function(textField_2.getText(), "dateChooser");
-				}
-		});
+
 		
 
 	}// End of Constructor
@@ -436,7 +436,7 @@ public class Regular_Update extends JFrame {
 		sb = OpenFileAsStringB();
 		//'Version' is input to this function by the callee
 		if (Version == "" || ProductFileMatch(sb) !=0 ) {
-			setFeedback("Version field cannot be empty","LdifSearch_versionEmpty");
+			setFeedback("Version field empty OR ProductAndFileMismatch","LdifSearch_versionEmpty");
 			return; }		
 		setFeedback("","LdifSearch_1");
 		textField_2.setBackground(Color.white);
@@ -568,6 +568,7 @@ public class Regular_Update extends JFrame {
 			search_builder = "SupportedSoftware p=\"SNL\"";
 			// System.out.println("In SNL");
 		}
+		//else {System.out.println("Inside else"); product_name = "";search_builder = "";}
 	} // End of product_selection()
 	public void searchButtonF() {
 		rg_sb = "";
@@ -1109,8 +1110,10 @@ public class Regular_Update extends JFrame {
 	} // End of check_param(StringBuilder sb)
 //Match of Product file and Selected product
 	public int ProductFileMatch(StringBuilder sb) {
-		int j = sb.indexOf(search_builder);		
-		if (j == -1) {
+		try {
+			product_selection();
+			int j = sb.indexOf(search_builder);		
+			if (j == -1) {
 			// JOptionPane.showMessageDialog(null, "Select correct product for this LDIF
 			// file");
 			setFeedback("File does not match with selected product.","ProductFileMatch_JvariableCheck");
@@ -1118,7 +1121,8 @@ public class Regular_Update extends JFrame {
 			sb = null;
 			clearButton();
 			return j;
-		}
+			}// end of IF
+			} catch(NullPointerException e) {setFeedback("File does not match with selected product.","ProductFileMatch_JvariableCheck");}
 		return 0;		
 	} // End of ProductFileMatch()
 	public int all_param_check() {

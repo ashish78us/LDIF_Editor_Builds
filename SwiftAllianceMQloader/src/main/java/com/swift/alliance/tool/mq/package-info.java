@@ -1,1 +1,0 @@
-package com.swift.alliance.tool.mq;
